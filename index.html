@@ -1,741 +1,316 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>柠檬 の 资源下载站 | 资源中心</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://fastlist-css.pages.dev/css2.css">
-  <link rel="stylesheet" href="https://fastlist-css.pages.dev/css.css">
-  <style>
-    /* css */
-    :root {
-      --primary: #0067C0;
-      --on-primary: #FFFFFF;
-      --primary-container: #D3E5FF;
-      --on-primary-container: #001D36;
-      
-      --secondary: #535F70;
-      --on-secondary: #FFFFFF;
-      --secondary-container: #D7E3F7;
-      --on-secondary-container: #101C2B;
-      
-      --surface: #F9F9FA;
-      --on-surface: #1A1C1E;
-      --surface-variant: #DFE2EB;
-      --on-surface-variant: #43474E;
-      
-      --background: #F9F9FA;
-      --on-background: #1A1C1E;
-      
-      --outline: #74777F;
-      --outline-variant: #C4C6D0;
-      
-      --error: #BA1A1A;
-      --on-error: #FFFFFF;
-      --error-container: #FFDAD6;
-      --on-error-container: #410002;
-      
-      --success: #0C7D60;
-      --on-success: #FFFFFF;
-      --success-container: #A6F2DB;
-      --on-success-container: #002116;
-      
-      --warning: #E6B400;
-      --on-warning: #FFFFFF;
-      --warning-container: #FFE9A3;
-      --on-warning-container: #4C3D00;
-      
-      --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
-      --elevation-2: 0 2px 6px rgba(0, 0, 0, 0.05), 0 3px 6px rgba(0, 0, 0, 0.1);
-      --elevation-3: 0 4px 12px rgba(0, 0, 0, 0.05), 0 6px 12px rgba(0, 0, 0, 0.1);
-      
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 18px;
-      --radius-xxl: 28px;
-      
-      --spacing-xs: 4px;
-      --spacing-sm: 8px;
-      --spacing-md: 16px;
-      --spacing-lg: 24px;
-      --spacing-xl: 32px;
-      --spacing-xxl: 48px;
-      
-      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      --icon-size-sm: 18px;
-      --icon-size-md: 24px;
-      --icon-size-lg: 32px;
-    }
-
-    /* 暗色主题 */
-    [data-theme="dark"] {
-      --primary: #A8C8FF;
-      --on-primary: #003059;
-      --primary-container: #00497E;
-      --on-primary-container: #D3E5FF;
-      
-      --secondary: #BBC7DB;
-      --on-secondary: #253140;
-      --secondary-container: #3B4858;
-      --on-secondary-container: #D7E3F7;
-      
-      --surface: #121316;
-      --on-surface: #E2E2E5;
-      --surface-variant: #43474E;
-      --on-surface-variant: #C4C6D0;
-      
-      --background: #121316;
-      --on-background: #E2E2E5;
-      
-      --outline: #8E9199;
-      --outline-variant: #43474E;
-      
-      --error: #FFB4AB;
-      --on-error: #690005;
-      --error-container: #93000A;
-      --on-error-container: #FFDAD6;
-      
-      --success: #88D8BF;
-      --on-success: #00382A;
-      --success-container: #00503F;
-      --on-success-container: #A6F2DB;
-      
-      --warning: #FFDC48;
-      --on-warning: #3D3000;
-      --warning-container: #5F4E00;
-      --on-warning-container: #FFE9A3;
-      
-      --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
-      --elevation-2: 0 2px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.3);
-      --elevation-3: 0 4px 12px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
-      transition: background-color var(--transition), color var(--transition), border-color var(--transition);
-    }
-    
-    body {
-      background-color: var(--background);
-      color: var(--on-background);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.5;
-      padding: var(--spacing-md);
-    }
-    
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--spacing-lg);
-      padding-bottom: var(--spacing-xl);
-    }
-
-    @media (min-width: 768px) {
-      .container {
-        grid-template-columns: 1.2fr 0.8fr;
-      }
-    }
-
-    header {
-      grid-column: 1 / -1;
-      text-align: center;
-      margin: var(--spacing-xl) 0;
-      position: relative;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .logo-icon {
-      background: var(--primary);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-icon i {
-      font-size: 28px;
-      color: var(--on-primary);
-    }
-
-    h1 {
-      color: var(--primary);
-      font-size: 2.5rem;
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .theme-switcher {
-      position: fixed;
-      top: var(--spacing-md);
-      right: var(--spacing-md);
-      z-index: 1000;
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .theme-toggle {
-      position: relative;
-      width: 48px;
-      height: 24px;
-      background: var(--surface-variant);
-      border-radius: var(--radius-xxl);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 2px;
-      transition: background-color var(--transition);
-    }
-    
-    .theme-toggle::before {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--primary);
-      left: 2px;
-      transition: transform var(--transition);
-    }
-    
-    [data-theme="dark"] .theme-toggle::before {
-      transform: translateX(24px);
-    }
-    
-    .theme-icon {
-      position: relative;
-      z-index: 1;
-      font-size: var(--icon-size-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      color: var(--on-primary);
-    }
-    
-    .light-icon {
-      opacity: 1;
-      transition: opacity var(--transition);
-    }
-    
-    .dark-icon {
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-    
-    [data-theme="dark"] .light-icon {
-      opacity: 0;
-    }
-    
-    [data-theme="dark"] .dark-icon {
-      opacity: 1;
-    }
-
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--elevation-1);
-      padding: var(--spacing-xl);
-      margin-bottom: var(--spacing-xl);
-      transition: box-shadow var(--transition), transform var(--transition);
-    }
-    
-    .card:hover {
-      box-shadow: var(--elevation-2);
-    }
-
-    .announcement-section {
-      grid-column: 1 / -1;
-      background: var(--warning-container);
-      padding: var(--spacing-lg);
-      border-radius: var(--radius-lg);
-      margin-bottom: var(--spacing-md);
-    }
-
-    .announcement-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--spacing-md);
-    }
-
-    .announcement-title {
-      color: var(--on-warning-container);
-      margin: 0;
-      font-size: 1.4rem;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .refresh-button {
-      background: rgba(255, 255, 255, 0.3);
-      border: 1px solid var(--on-warning-container);
-      color: var(--on-warning-container);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-    }
-
-    .refresh-button:hover {
-      background: var(--on-warning-container);
-      color: var(--warning-container);
-    }
-
-    .section-title {
-      color: var(--primary);
-      padding-bottom: var(--spacing-md);
-      margin-top: 0;
-      margin-bottom: var(--spacing-lg);
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      border-bottom: 1px solid var(--outline-variant);
-    }
-
-    .section-title i {
-      font-size: 1.4rem;
-    }
-
-    .release {
-      background-color: var(--surface-variant);
-      padding: var(--spacing-lg);
-      margin: var(--spacing-lg) 0;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--outline-variant);
-      transition: var(--transition);
-    }
-
-    .release-header h3 {
-      color: var(--primary);
-      margin-bottom: var(--spacing-sm);
-      font-size: 1.3rem;
-    }
-
-    .release-meta {
-      display: flex;
-      gap: var(--spacing-lg);
-      color: var(--on-surface-variant);
-      margin-bottom: var(--spacing-md);
-      font-size: 0.95rem;
-    }
-
-    .download-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md);
-      margin: var(--spacing-sm) 0;
-      background: var(--surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--outline-variant);
-      transition: var(--transition);
-    }
-
-    .download-item:hover {
-      transform: translateX(5px);
-      border-left: 4px solid var(--primary);
-    }
-
-    .file-info {
-      flex: 1;
-    }
-
-    .file-name {
-      font-weight: 600;
-      display: block;
-      margin-bottom: var(--spacing-xs);
-      font-size: 1.1rem;
-      color: var(--primary);
-    }
-
-    .file-size {
-      color: var(--on-surface-variant);
-      font-size: 0.9rem;
-    }
-
-    .download-options {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .download-link {
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      transition: var(--transition);
-      font-size: 0.95rem;
-      font-weight: 500;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-    }
-
-    .download-link:not(.accelerated) {
-      background: var(--surface-variant);
-      color: var(--on-surface-variant);
-      border: 1px solid var(--outline-variant);
-    }
-
-    .download-link:not(.accelerated):hover {
-      background: var(--outline-variant);
-    }
-
-    .download-link.accelerated {
-      background: var(--primary);
-      color: var(--on-primary);
-      border: 1px solid var(--primary);
-    }
-
-    .download-link.accelerated:hover {
-      opacity: 0.9;
-    }
-
-    .toggle-assets {
-      background: var(--primary);
-      color: var(--on-primary);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      transition: var(--transition);
-      margin-top: var(--spacing-md);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-    }
-
-    .toggle-assets:hover {
-      opacity: 0.9;
-    }
-
-    .quick-create {
-      background: var(--surface-variant);
-      padding: var(--spacing-lg);
-      border-radius: var(--radius-lg);
-      margin: var(--spacing-lg) 0;
-      border: 1px solid var(--outline-variant);
-      transition: var(--transition);
-    }
-
-    .form-input, .form-textarea {
-      width: 100%;
-      padding: var(--spacing-md);
-      margin: var(--spacing-sm) 0;
-      border: 1px solid var(--outline-variant);
-      border-radius: var(--radius-md);
-      box-sizing: border-box;
-      font-family: inherit;
-      transition: var(--transition);
-      font-size: 1rem;
-      background: var(--surface);
-      color: var(--on-surface);
-    }
-
-    .form-input:focus, .form-textarea:focus {
-      border-color: var(--primary);
-      outline: none;
-    }
-
-    .submit-button {
-      background: var(--primary);
-      color: var(--on-primary);
-      padding: var(--spacing-md) var(--spacing-lg);
-      border: none;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      transition: var(--transition);
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-xs);
-      margin-top: var(--spacing-sm);
-    }
-
-    .submit-button:hover {
-      opacity: 0.9;
-    }
-
-    .issue {
-      margin: var(--spacing-lg) 0;
-      padding: var(--spacing-lg);
-      background: var(--surface);
-      border: 1px solid var(--outline-variant);
-      border-radius: var(--radius-lg);
-      transition: var(--transition);
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-md);
-    }
-
-    .avatar {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--primary);
-      padding: 2px;
-    }
-
-    .comment {
-      margin: var(--spacing-lg) 0;
-      padding: var(--spacing-lg);
-      background: var(--surface-variant);
-      border-radius: var(--radius-md);
-      display: flex;
-      gap: var(--spacing-lg);
-      transition: var(--transition);
-      border: 1px solid var(--outline-variant);
-    }
-
-    .comment:hover {
-      transform: translateX(5px);
-      border-left: 3px solid var(--primary);
-    }
-
-    .comment-content {
-      flex-grow: 1;
-    }
-
-    .comment-author {
-      font-weight: 600;
-      color: var(--primary);
-      font-size: 1.1rem;
-    }
-
-    .comment-date {
-      color: var(--on-surface-variant);
-      font-size: 0.85rem;
-      margin-top: 3px;
-    }
-
-    .comments-container {
-      margin-top: var(--spacing-lg);
-      border-top: 1px solid var(--outline-variant);
-      padding-top: var(--spacing-lg);
-    }
-
-    .disclaimer-section {
-      grid-column: 1 / -1;
-      margin-top: var(--spacing-xl);
-      padding: var(--spacing-lg);
-      background: var(--surface-variant);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--outline-variant);
-      font-size: 0.95rem;
-      color: var(--on-surface-variant);
-      text-align: center;
-    }
-
-    .disclaimer-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: var(--transition);
-      border-bottom: 1px dashed var(--primary);
-    }
-
-    .disclaimer-link:hover {
-      border-bottom-style: solid;
-    }
-
-    .loading-text {
-      text-align: center;
-      color: var(--on-surface-variant);
-      padding: var(--spacing-xl);
-      font-size: 1.1rem;
-    }
-
-    .loading-text i {
-      margin-right: var(--spacing-sm);
-      animation: spin 1.5s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .stats-bar {
-      display: flex;
-      justify-content: space-around;
-      padding: var(--spacing-md);
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      margin: var(--spacing-lg) 0;
-      grid-column: 1 / -1;
-      border: 1px solid var(--outline-variant);
-    }
-
-    .stat-item {
-      text-align: center;
-      padding: var(--spacing-sm);
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: var(--spacing-xs);
-    }
-
-    .stat-label {
-      color: var(--on-surface-variant);
-      font-size: 0.95rem;
-    }
-
-    .footer {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: var(--spacing-lg);
-      margin-top: var(--spacing-lg);
-      color: var(--on-surface-variant);
-      font-size: 0.9rem;
-      border-top: 1px solid var(--outline-variant);
-    }
-
-    /* 新增样式 */
-    .github-stats {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-md);
-      margin-top: var(--spacing-sm);
-    }
-    
-    .github-stat {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      color: var(--on-surface-variant);
-      font-size: 0.95rem;
-    }
-    
-    .github-stat i {
-      color: var(--primary);
-    }
-    
-    .release-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--spacing-lg);
-    }
-    
-    .discussion-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--spacing-lg);
-    }
-    
-    @media (min-width: 768px) {
-      .release-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .discussion-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: var(--spacing-sm);
-      }
-      
-      h1 {
-        font-size: 2.2rem;
-      }
-      
-      .section-title {
-        font-size: 1.5rem;
-      }
-      
-      .download-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-md);
-      }
-
-      .download-options {
-        width: 100%;
-        flex-direction: column;
-      }
-      
-      .download-link {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-      }
-      
-      .stats-bar {
-        flex-direction: column;
-        gap: var(--spacing-md);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味验证测试</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 2px;
+        }
+        
+        .question-box {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .question-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .question-box p {
+            font-size: 1.2rem;
+            color: #444;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .input-group {
+            position: relative;
+            margin-bottom: 5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.6);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+        
+        .submit-btn:hover::after {
+            left: 100%;
+        }
+        
+        .hint {
+            color: #777;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .animation-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+        }
+        
+        .bouncing-ball {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 50%;
+            position: absolute;
+            animation: bounce 2s infinite ease-in-out;
+        }
+        
+        .ball-1 { top: 0; left: 0; animation-delay: 0s; }
+        .ball-2 { top: 40px; left: 20px; animation-delay: 0.2s; }
+        .ball-3 { top: 20px; left: 40px; animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .result-message {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: #27ae60;
+            border: 1px solid #2ecc71;
+        }
+        
+        .failure {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: #c0392b;
+            border: 1px solid #e74c3c;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .footer i {
+            color: #e74c3c;
+        }
+    </style>
 </head>
 <body>
-  <!-- 页面内容，已根据用户输入进行定制 -->
-  <div class="theme-switcher">
-    <div class="theme-toggle" onclick="toggleTheme()">
-      <span class="theme-icon light-icon"><i class="fas fa-sun"></i></span>
-      <span class="theme-icon dark-icon"><i class="fas fa-moon"></i></span>
+    <div class="container">
+        <div class="animation-container">
+            <div class="bouncing-ball ball-1"></div>
+            <div class="bouncing-ball ball-2"></div>
+            <div class="bouncing-ball ball-3"></div>
+        </div>
+        
+        <h1><i class="fas fa-user-check"></i> 趣味验证测试</h1>
+        
+        <div class="question-box">
+            <p><i class="fas fa-female"></i> 你妈是什么</p>
+            <div class="input-group">
+                <input type="text" id="answer" placeholder="傻逼">
+            </div>
+            <div class="hint">提示：看看输入框的提示文字</div>
+        </div>
+        
+        <div class="question-box">
+            <p><i class="fas fa-male"></i> 你爸是什么</p>
+            <div class="input-group">
+                <input type="text" id="answer2" placeholder="歌姬吧">
+            </div>
+            <div class="hint">提示：观察输入框的提示文字</div>
+        </div>
+        
+        <div class="question-box">
+            <p><i class="fas fa-user"></i> 你是什么</p>
+            <div class="input-group">
+                <input type="text" id="answer3" placeholder="杂鱼">
+            </div>
+            <div class="hint">提示：注意输入框的提示文字</div>
+        </div>
+        
+        <button id="tijiao" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> 提交验证
+        </button>
+        
+        <div id="result" class="result-message"></div>
+        
+        <div class="footer">
+            <p><i class="fas fa-exclamation-triangle"></i> 本验证仅供娱乐，请勿认真对待</p>
+        </div>
     </div>
-  </div>
 
-  <header>
-    <div class="logo">
-      <div class="logo-icon">
-        <i class="fas fa-cloud"></i>
-      </div>
-      <h1>柠檬 の 资源下载站</h1>
-    </div>
-    <div class="github-stats">
-      <div class="github-stat">
-        <i class="fab fa-github"></i>
-        <span id="github-stars">加载中...</span> stars
-      </div>
-      <div class="github-stat">
-        <i class="fas fa-code-branch"></i>
-        <span id="github-forks">加载中...</span> forks
-      </div>
-    </div>
-  </header>
-  
-  <!-- 其余页面内容 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var a = document.getElementById("answer");
+            var b = document.getElementById("answer2");
+            var c = document.getElementById("answer3");
+            var d = document.getElementById("tijiao");
+            var result = document.getElementById("result");
+            
+            d.onclick = function() {
+                // 清除之前的消息
+                result.style.display = "none";
+                
+                // 检查答案
+                if(a.value === "我妈" && b.value === "我爸" && c.value === "杂鱼") {
+                    result.className = "result-message success";
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> 恭喜你通过验证！奖励你晚上陪我睡';
+                    result.style.display = "block";
+                    
+                    // 添加成功动画效果
+                    document.querySelector('.container').classList.add('success-animation');
+                    setTimeout(function() {
+                        document.querySelector('.container').classList.remove('success-animation');
+                    }, 2000);
+                } else {
+                    result.className = "result-message failure";
+                    result.innerHTML = '<i class="fas fa-times-circle"></i> 这都做不对，你可真是杂鱼呢~';
+                    result.style.display = "block";
+                    
+                    // 添加抖动效果
+                    a.classList.add('shake');
+                    b.classList.add('shake');
+                    c.classList.add('shake');
+                    setTimeout(function() {
+                        a.classList.remove('shake');
+                        b.classList.remove('shake');
+                        c.classList.remove('shake');
+                    }, 500);
+                }
+            };
+            
+            // 添加输入框动画
+            var inputs = document.querySelectorAll('input');
+            inputs.forEach(function(input) {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = "scale(1.02)";
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = "scale(1)";
+                });
+            });
+        });
+    </script>
 </body>
 </html>
