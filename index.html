@@ -274,8 +274,12 @@
                 // 检查答案
                 if(a.value === "我妈" && b.value === "我爸" && c.value === "杂鱼") {
                     result.className = "result-message success";
-                    result.innerHTML = '<i class="fas fa-check-circle"></i> 恭喜你通过验证！奖励你晚上陪我睡';
+                    result.innerHTML = '<i class="fas fa-check-circle"></i> 恭喜你通过验证！开始自动跳转！';
                     result.style.display = "block";
+                    // 自动跳转
+                    setInterval(function(){
+                        window.location.href = "index_2.html";
+                    },5000)
                     
                     // 添加成功动画效果
                     document.querySelector('.container').classList.add('success-animation');
