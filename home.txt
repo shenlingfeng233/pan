@@ -20,323 +20,127 @@ Python 之禅，作者：Tim Peters
 如果实现易于解释，那它可能是个好主意。
 命名空间是一个非常棒的想法——让我们多做一些这样的事情吧！
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>趣味验证测试</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            z-index: -1;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            border-radius: 2px;
-        }
-        
-        .question-box {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-        
-        .question-box:hover {
-            transform: translateY(-5px);
-        }
-        
-        .question-box p {
-            font-size: 1.2rem;
-            color: #444;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        
-        .input-group {
-            position: relative;
-            margin-bottom: 5px;
-        }
-        
-        input {
-            width: 100%;
-            padding: 14px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-        
-        input:focus {
-            border-color: #6a11cb;
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
-        }
-        
-        input::placeholder {
-            color: #aaa;
-        }
-        
-        .submit-btn {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            padding: 16px 40px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.6);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(1px);
-        }
-        
-        .submit-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: 0.5s;
-        }
-        
-        .submit-btn:hover::after {
-            left: 100%;
-        }
-        
-        .hint {
-            color: #777;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            font-style: italic;
-        }
-        
-        .animation-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 60px;
-            height: 60px;
-        }
-        
-        .bouncing-ball {
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            border-radius: 50%;
-            position: absolute;
-            animation: bounce 2s infinite ease-in-out;
-        }
-        
-        .ball-1 { top: 0; left: 0; animation-delay: 0s; }
-        .ball-2 { top: 40px; left: 20px; animation-delay: 0.2s; }
-        .ball-3 { top: 20px; left: 40px; animation-delay: 0.4s; }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        .result-message {
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            display: none;
-        }
-        
-        .success {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
-            border: 1px solid #2ecc71;
-        }
-        
-        .failure {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #c0392b;
-            border: 1px solid #e74c3c;
-        }
-        
-        .footer {
-            margin-top: 30px;
-            color: #777;
-            font-size: 0.9rem;
-        }
-        
-        .footer i {
-            color: #e74c3c;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="animation-container">
-            <div class="bouncing-ball ball-1"></div>
-            <div class="bouncing-ball ball-2"></div>
-            <div class="bouncing-ball ball-3"></div>
-        </div>
-        
-        <h1><i class="fas fa-user-check"></i> 趣味验证测试</h1>
-        
-        <div class="question-box">
-            <p><i class="fas fa-female"></i> 你妈是什么</p>
-            <div class="input-group">
-                <input type="text" id="answer" placeholder="傻逼">
-            </div>
-            <div class="hint">提示：看看输入框的提示文字</div>
-        </div>
-        
-        <div class="question-box">
-            <p><i class="fas fa-male"></i> 你爸是什么</p>
-            <div class="input-group">
-                <input type="text" id="answer2" placeholder="歌姬吧">
-            </div>
-            <div class="hint">提示：观察输入框的提示文字</div>
-        </div>
-        
-        <div class="question-box">
-            <p><i class="fas fa-user"></i> 你是什么</p>
-            <div class="input-group">
-                <input type="text" id="answer3" placeholder="杂鱼">
-            </div>
-            <div class="hint">提示：注意输入框的提示文字</div>
-        </div>
-        
-        <button id="tijiao" class="submit-btn">
-            <i class="fas fa-paper-plane"></i> 提交验证
-        </button>
-        
-        <div id="result" class="result-message"></div>
-        
-        <div class="footer">
-            <p><i class="fas fa-exclamation-triangle"></i> 本验证仅供娱乐，请勿认真对待</p>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var a = document.getElementById("answer");
-            var b = document.getElementById("answer2");
-            var c = document.getElementById("answer3");
-            var d = document.getElementById("tijiao");
-            var result = document.getElementById("result");
-            
-            d.onclick = function() {
-                // 清除之前的消息
-                result.style.display = "none";
-                
-                // 检查答案
-                if(a.value === "我妈" && b.value === "我爸" && c.value === "杂鱼") {
-                    result.className = "result-message success";
-                    result.innerHTML = '<i class="fas fa-check-circle"></i> 恭喜你通过验证！开始自动跳转！';
-                    result.style.display = "block";
-                    // 自动跳转
-                    setInterval(function(){
-                        window.location.href = "index_2.html";
-                    },5000)
-                    
-                    // 添加成功动画效果
-                    document.querySelector('.container').classList.add('success-animation');
-                    setTimeout(function() {
-                        document.querySelector('.container').classList.remove('success-animation');
-                    }, 2000);
-                } else {
-                    result.className = "result-message failure";
-                    result.innerHTML = '<i class="fas fa-times-circle"></i> 这都做不对，你可真是杂鱼呢~';
-                    result.style.display = "block";
-                    
-                    // 添加抖动效果
-                    a.classList.add('shake');
-                    b.classList.add('shake');
-                    c.classList.add('shake');
-                    setTimeout(function() {
-                        a.classList.remove('shake');
-                        b.classList.remove('shake');
-                        c.classList.remove('shake');
-                    }, 500);
-                }
-            };
-            
-            // 添加输入框动画
-            var inputs = document.querySelectorAll('input');
-            inputs.forEach(function(input) {
-                input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = "scale(1.02)";
-                });
-                
-                input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = "scale(1)";
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+Package                      Version
+---------------------------- -----------
+absl-py                      2.3.1
+altgraph                     0.17.4
+annotated-types              0.7.0
+anyio                        4.9.0
+asttokens                    3.0.0
+astunparse                   1.6.3
+certifi                      2025.4.26
+charset-normalizer           3.4.2
+click                        8.2.1
+colorama                     0.4.6
+comm                         0.2.2
+contourpy                    1.3.2
+cycler                       0.12.1
+dearpygui                    2.0.0
+debugpy                      1.8.14
+decorator                    5.2.1
+distro                       1.9.0
+exceptiongroup               1.3.0
+executing                    2.2.0
+fastapi                      0.116.0
+ffmpeg                       1.4
+filelock                     3.18.0
+flatbuffers                  25.2.10
+fonttools                    4.58.0
+fsspec                       2025.5.1
+gast                         0.6.0
+google-pasta                 0.2.0
+grpcio                       1.73.1
+h11                          0.16.0
+h5py                         3.14.0
+httpcore                     1.0.9
+httpx                        0.28.1
+huggingface-hub              0.33.2
+idna                         3.10
+ipykernel                    6.29.5
+ipython                      8.37.0
+jedi                         0.19.2
+jieba                        0.42.1
+Jinja2                       3.1.6
+jiter                        0.10.0
+jupyter_client               8.6.3
+jupyter_core                 5.8.1
+keras                        3.10.0
+kiwisolver                   1.4.8
+libclang                     18.1.1
+Markdown                     3.8.2
+markdown-it-py               3.0.0
+MarkupSafe                   3.0.2
+matplotlib                   3.10.3
+matplotlib-inline            0.1.7
+mdurl                        0.1.2
+ml_dtypes                    0.5.1
+mpmath                       1.3.0
+namex                        0.1.0
+nest-asyncio                 1.6.0
+networkx                     3.4.2
+numpy                        2.1.3
+openai                       1.93.1
+opt_einsum                   3.4.0
+optree                       0.16.0
+packaging                    24.2
+parso                        0.8.4
+pefile                       2023.2.7
+pillow                       11.2.1
+pip                          25.2
+platformdirs                 4.3.8
+prompt_toolkit               3.0.51
+protobuf                     5.29.5
+psutil                       7.0.0
+pure_eval                    0.2.3
+py                           1.11.0
+pyarmor                      9.1.7
+pyarmor.cli.core             7.6.7
+PyAudio                      0.2.14
+pycryptodome                 3.23.0
+pydantic                     2.11.7
+pydantic_core                2.33.2
+pygame                       2.6.1
+Pygments                     2.19.2
+pyinstaller                  6.12.0
+pyinstaller-hooks-contrib    2025.2
+pyparsing                    3.2.3
+PyQt5                        5.15.11
+PyQt5-Qt5                    5.15.2
+PyQt5_sip                    12.17.0
+python-dateutil              2.9.0.post0
+python-vlc                   3.0.21203
+pywin32                      310
+pywin32-ctypes               0.2.3
+PyYAML                       6.0.2
+pyzmq                        27.0.0
+regex                        2024.11.6
+remi                         2022.7.27
+requests                     2.32.3
+rich                         14.0.0
+safetensors                  0.5.3
+setuptools                   65.5.0
+six                          1.17.0
+sniffio                      1.3.1
+stack-data                   0.6.3
+starlette                    0.46.2
+sympy                        1.14.0
+tensorboard                  2.19.0
+tensorboard-data-server      0.7.2
+tensorflow-io-gcs-filesystem 0.31.0
+termcolor                    3.1.0
+tf_keras                     2.19.0
+tokenizers                   0.21.2
+tornado                      6.5.1
+tqdm                         4.67.1
+traitlets                    5.14.3
+transformers                 4.53.1
+typing_extensions            4.14.0
+typing-inspection            0.4.1
+urllib3                      2.4.0
+uvicorn                      0.35.0
+wcwidth                      0.2.13
+Werkzeug                     3.1.3
+wheel                        0.45.1
+WMI                          1.5.1
+wordcloud                    1.9.4
+wrapt                        1.17.2
