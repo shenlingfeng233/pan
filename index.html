@@ -1,42 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>shenlingfeng233的主页</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+
+        body {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .btn-space {
+            padding: 15px 45px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 500% auto;
+            font-weight: bold;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-space:hover {
+            background-position: right center;
+            box-shadow: 0 0 20px #743ad5;
+            color: rgb(255, 255, 255);
+            text-shadow: 1px 1px 10px #d53a9d;
+        }
+
+        .space {
+            background-image: linear-gradient(to right, #743ad5 0%, #d53a9d 51%, #743ad5 100%);
+        }
+
+        footer {
+            background-color: #f8f8f8;
+            padding: 10px 0;
+        }
+    </style>
 </head>
 
 <body>
-    <!DOCTYPE html>
-    <html lang="zh">
+    <header style="background-color: thistle; padding: 10px 0;">
+        <h1>shenlingfeng233的主页</h1>
+    </header>
 
-    <head>
-        <meta charset="UTF-8">
-        <title>shenlingfeng233的博客</title>
-        <style>
-            * {
-                text-align: center;
-            }
+    <main>
+        <div>
+            <button id="mc_btn" class="btn-space space">Minecraft 整合包</button>
+        </div>
+    </main>
 
-        </style>
-    </head>
+    <footer>
+        <p style="margin: 0 20px 10px;">我的主页的开发离不开开源项目<a href="https://github.com/uiverse-io/galaxy">galaxy</a>的付出和MIT license,望看见这段文字的人可以为galaxy点上一颗star,谢谢！</p>
+    </footer>
 
-    <body>
-        <header>
-            <h1>shenlingfeng233的博客</h1>
-            <p>由于我太懒了，所以就这样吧</p>
-        </header>
-        <main>
-            <a href="slow_countryside_website.html">关于我的minecraft整合包</a>
-        </main>
-        <script>
-
-        </script>
-    </body>
-
-    </html>
-
+    <script>
+        var mc_bottom = document.getElementById("mc_btn");
+        mc_bottom.onclick = function () {
+            window.open("slow_countryside_website.html");
+        };
+    </script>
 </body>
 
 </html>
