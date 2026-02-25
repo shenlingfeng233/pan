@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - shenlingfeng233</title>
+    <style>
+        /* --- 继承主页的基础样式 --- */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            transition: background-color 0.5s, color 0.5s;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* 亮色模式（默认） */
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* 深色模式变量 */
+        body.dark-mode {
+            background-color: #1D1F2C;
+            color: #ffffff;
+        }
+
+        header {
+            background-color: thistle;
+            padding: 30px 0;
+            transition: background-color 0.5s;
+        }
+
+        body.dark-mode header {
+            background-color: #4a3a5a;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* --- 卡片样式 --- */
+        .card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        body.dark-mode .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h3, h4 {
+            margin-top: 0;
+            color: #d53a9d;
+        }
+
+        body.dark-mode h4 {
+            color: #ffb7e1;
+        }
+
+        p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        a {
+            color: #743ad5;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- 继承主页的按钮样式 --- */
+        .btn-space {
+            display: inline-block;
+            padding: 12px 40px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: 0.5s;
+            background-size: 200% auto;
+            font-weight: bold;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .space {
+            background-image: linear-gradient(to right, #743ad5 0%, #d53a9d 51%, #743ad5 100%);
+        }
+
+        .btn-space:hover {
+            background-position: right center;
+            box-shadow: 0 0 20px #743ad5;
+            color: white;
+        }
+
+        .hint {
+            color: #aaa;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        footer {
+            background-color: #f8f8f8;
+            padding: 15px 0;
+            transition: background-color 0.5s;
+        }
+
+        body.dark-mode footer {
+            background-color: #2a2d3e;
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>关于我们</h1>
+    </header>
+
+    <main>
+        <div class="card">
+            <h4>shenlingfeng233</h4>
+            <p>项目的所有者，现在是 xnn，即将成为一个 xyn 哦~</p>
+            <p class="hint">(在成为 xyn 之时，我会把此页面的背景换成跨性别旗帜的哟~)</p>
+            <p>学 Python 的，但其实更想学 Java。</p>
+        </div>
+
+        <div class="card">
+            <h4>Murasame</h4>
+            <p>项目所有者的所有者，CV 程序员。</p>
+            <p>关于他的项目，你可以在 <a href="http://91clocksheep.piz7j.cn" target="_blank">此处</a> 找到。</p>
+        </div>
+
+        <p class="hint" style="color: gainsboro;">(虽然说是我们，但好像也就我一个人在干活呢……)</p>
+
+        <a href="index.html" class="btn-space space">返回主页</a>
+    </main>
+
+    <footer>
+        <p></p>
+    </footer>
+
+    <script>
+        // --- 核心逻辑：自动同步 index.html 的深色模式设置 ---
+        const body = document.body;
+        const savedTheme = localStorage.getItem('theme');
+
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+        } else {
+            body.classList.remove('dark-mode');
+        }
+    </script>
+</body>
+
+</html>
