@@ -288,6 +288,7 @@
     <main>
         <div>
             <button id="mc_btn" class="btn-space space">Minecraft 整合包</button>
+            <button id="about_btn" class="btn-space space">关于我们</button>
         </div>
     </main>
 
@@ -301,6 +302,11 @@
         var mc_bottom = document.getElementById("mc_btn");
         mc_bottom.onclick = function () {
             window.open("slow_countryside_website.html");
+        };
+
+        var about_bottom = document.getElementById("about_btn");
+        about_bottom.onclick = function () {
+            window.open("about_us.html"); // 这里填入你关于我们页面的文件名
         };
 
         const themeToggle = document.getElementById('theme-toggle');
