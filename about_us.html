@@ -7,28 +7,38 @@
     <title>关于我们 - shenlingfeng233</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍥</text></svg>">
     <style>
-        /* --- 继承主页的基础样式 --- */
+        /* --- 基础样式 --- */
         html,
         body {
             height: 100%;
             margin: 0;
-            transition: background-color 0.5s, color 0.5s;
+            transition: background 0.5s, background-color 0.5s, color 0.5s;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
+        /* 默认背景 */
         body {
             display: flex;
             flex-direction: column;
             text-align: center;
-        }
-
-        /* 亮色模式（默认） */
-        body {
             background-color: #f4f4f9;
             color: #333;
         }
 
-        /* 深色模式变量 */
+        /* --- 跨性别旗帜背景类 --- */
+        body.trans-mode {
+            background: linear-gradient(
+                to bottom,
+                #5BCEFA 0%, #5BCEFA 20%, 
+                #F5A9B8 20%, #F5A9B8 40%, 
+                #FFFFFF 40%, #FFFFFF 60%, 
+                #F5A9B8 60%, #F5A9B8 80%, 
+                #5BCEFA 80%, #5BCEFA 100%
+            );
+            background-attachment: fixed;
+        }
+
+        /* 深色模式基础 */
         body.dark-mode {
             background-color: #1D1F2C;
             color: #ffffff;
@@ -37,7 +47,14 @@
         header {
             background-color: thistle;
             padding: 30px 0;
-            transition: background-color 0.5s;
+            transition: all 0.5s;
+        }
+
+        /* 旗帜模式下的页眉样式 */
+        body.trans-mode header {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         body.dark-mode header {
@@ -53,9 +70,9 @@
             gap: 25px;
         }
 
-        /* --- 卡片样式 --- */
+        /* --- 卡片样式优化 --- */
         .card {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 25px;
@@ -63,11 +80,11 @@
             max-width: 600px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background 0.5s;
         }
 
         body.dark-mode .card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(40, 40, 60, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -75,9 +92,10 @@
             transform: translateY(-5px);
         }
 
-        h3, h4 {
+        h4 {
             margin-top: 0;
             color: #d53a9d;
+            font-size: 1.5rem;
         }
 
         body.dark-mode h4 {
@@ -99,35 +117,57 @@
             text-decoration: underline;
         }
 
-        /* --- 继承主页的按钮样式 --- */
+        /* --- 悬浮切换按钮样式 --- */
+        .toggle-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 20px;
+            background: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #5BCEFA, #F5A9B8);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* --- 主页按钮 --- */
         .btn-space {
             display: inline-block;
             padding: 12px 40px;
             text-align: center;
-            text-transform: uppercase;
             transition: 0.5s;
             background-size: 200% auto;
             font-weight: bold;
             color: white;
             border-radius: 10px;
-            cursor: pointer;
-            border: none;
+            background-image: linear-gradient(to right, #743ad5 0%, #d53a9d 51%, #743ad5 100%);
             text-decoration: none;
             margin-top: 20px;
-        }
-
-        .space {
-            background-image: linear-gradient(to right, #743ad5 0%, #d53a9d 51%, #743ad5 100%);
         }
 
         .btn-space:hover {
             background-position: right center;
             box-shadow: 0 0 20px #743ad5;
-            color: white;
         }
 
         .hint {
-            color: #aaa;
+            color: #888;
             font-size: 0.85rem;
             font-style: italic;
         }
@@ -135,12 +175,11 @@
         footer {
             background-color: #f8f8f8;
             padding: 15px 0;
-            transition: background-color 0.5s;
+            transition: background 0.5s;
         }
 
-        body.dark-mode footer {
-            background-color: #2a2d3e;
-            color: #ccc;
+        body.trans-mode footer {
+            background-color: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -153,8 +192,7 @@
     <main>
         <div class="card">
             <h4>shenlingfeng233</h4>
-            <p>项目的所有者，现在是 xnn，即将成为一个 xyn 哦~</p>
-            <p class="hint">(在成为 xyn 之时，我会把此页面的背景换成跨性别旗帜的哟~)</p>
+            <p>项目的所有者，以前是 xnn，现在是一个 xyn 哦~</p>
             <p>学 Python 的，但其实更想学 Java。</p>
         </div>
 
@@ -164,27 +202,62 @@
             <p>关于他的项目，你可以在 <a href="http://91clocksheep.piz7j.cn" target="_blank">此处</a> 找到。</p>
         </div>
 
-        <p class="hint" style="color: gainsboro;">(虽然说是我们，但好像也就我一个人在干活呢……)</p>
+        <p class="hint">(虽然说是我们，但好像也就我一个人在干活呢……)</p>
 
-        <a href="index.html" class="btn-space space">返回主页</a>
+        <a href="index.html" class="btn-space">返回主页</a>
     </main>
 
+    <button id="bgToggle" class="toggle-btn">
+        <span>🏳️‍⚧️</span>
+        <span id="btnText">显示旗帜背景</span>
+    </button>
+
     <footer>
-        <p></p>
+        <p>© 2026 shenlingfeng233</p>
     </footer>
 
     <script>
-        // --- 核心逻辑：自动同步 index.html 的深色模式设置 ---
         const body = document.body;
-        const savedTheme = localStorage.getItem('theme');
+        const bgToggle = document.getElementById('bgToggle');
+        const btnText = document.getElementById('btnText');
 
+        // 1. 同步主页的深色模式状态
+        const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'dark') {
             body.classList.add('dark-mode');
-        } else {
-            body.classList.remove('dark-mode');
+        }
+
+        // 2. 处理跨性别旗帜背景状态
+        const savedTransMode = localStorage.getItem('trans-mode');
+        
+        // 初始化
+        if (savedTransMode === 'active') {
+            enableTransMode();
+        }
+
+        // 切换逻辑
+        bgToggle.addEventListener('click', () => {
+            if (body.classList.contains('trans-mode')) {
+                disableTransMode();
+            } else {
+                enableTransMode();
+            }
+        });
+
+        function enableTransMode() {
+            body.classList.add('trans-mode');
+            bgToggle.classList.add('active');
+            btnText.innerText = "恢复普通背景";
+            localStorage.setItem('trans-mode', 'active');
+        }
+
+        function disableTransMode() {
+            body.classList.remove('trans-mode');
+            bgToggle.classList.remove('active');
+            btnText.innerText = "显示旗帜背景";
+            localStorage.setItem('trans-mode', 'inactive');
         }
     </script>
 </body>
-
 
 </html>
