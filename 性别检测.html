@@ -29,7 +29,6 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            /* 多层混合渐变，模拟 Windows 的微光与流体蓝紫调 */
             background: 
                 radial-gradient(circle at 20% 30%, #0c3370 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, #1a1b5c 0%, transparent 60%),
@@ -41,17 +40,10 @@
             transition: opacity 0.5s ease;
         }
 
-        /* 模拟 Windows 登录时那种非常缓慢、柔和的流光呼吸感 */
         @keyframes winGlow {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* 主容器 */
@@ -66,7 +58,7 @@
             transition: opacity 0.5s ease;
         }
 
-        /* 更加契合 Windows 质感的毛玻璃卡片 */
+        /* 毛玻璃卡片 */
         .glass-card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(25px);
@@ -108,7 +100,6 @@
             text-align: center;
         }
 
-        /* 聚焦时使用类似 Windows 11 的标志性淡蓝色 */
         input[type="text"]:focus {
             border-color: #60cdff;
             box-shadow: 0 0 12px rgba(96, 205, 255, 0.3);
@@ -116,7 +107,7 @@
 
         /* 按钮 */
         .btn {
-            background: #0067b8; /* Windows 经典经典蓝色 */
+            background: #0067b8;
             color: #ffffff;
             border: none;
             padding: 12px 35px;
@@ -146,7 +137,6 @@
             overflow: hidden;
         }
 
-        /* Windows 风格的加载进度条颜色 */
         .progress-bar {
             width: 0%;
             height: 100%;
@@ -291,10 +281,13 @@
             const resultScreen = document.getElementById('result-screen');
             const resultText = document.getElementById('result-text');
 
-            if (userInput === "") {
-                resultText.innerText = "结果：无机物";
+            // --- 核心彩蛋与判定逻辑修改 ---
+            if (userInput === "520") {
+                resultText.innerText = "你是我的"; // 专属彩蛋
+            } else if (userInput === "") {
+                resultText.innerText = "结果：无机物"; // 默认调侃
             } else {
-                resultText.innerText = `结果：${userInput}`;
+                resultText.innerText = `结果：${userInput}`; // 绝对理性派回显
             }
 
             // 瞬间切断华丽背景，进入冷酷纯黑
