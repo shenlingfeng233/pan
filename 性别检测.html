@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高级性别量子探测系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #010415;
+            color: #fff;
+            transition: background-color 0.5s ease;
+        }
+
+        /* --- Windows 首次登录风格的动态渐变背景 --- */
+        .win-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            /* 多层混合渐变，模拟 Windows 的微光与流体蓝紫调 */
+            background: 
+                radial-gradient(circle at 20% 30%, #0c3370 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, #1a1b5c 0%, transparent 60%),
+                radial-gradient(circle at 40% 80%, #0d4b8f 0%, transparent 70%),
+                radial-gradient(circle at 70% 70%, #121035 0%, transparent 60%),
+                #020616;
+            background-size: 200% 200%;
+            animation: winGlow 15s ease infinite;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 模拟 Windows 登录时那种非常缓慢、柔和的流光呼吸感 */
+        @keyframes winGlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 更加契合 Windows 质感的毛玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* 输入框 */
+        .input-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        /* 聚焦时使用类似 Windows 11 的标志性淡蓝色 */
+        input[type="text"]:focus {
+            border-color: #60cdff;
+            box-shadow: 0 0 12px rgba(96, 205, 255, 0.3);
+        }
+
+        /* 按钮 */
+        .btn {
+            background: #0067b8; /* Windows 经典经典蓝色 */
+            color: #ffffff;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #005da6;
+            box-shadow: 0 0 15px rgba(0, 103, 184, 0.4);
+        }
+
+        /* 进度条页面 */
+        .loading-box {
+            display: none;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+
+        /* Windows 风格的加载进度条颜色 */
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #60cdff;
+            box-shadow: 0 0 8px #60cdff;
+            transition: width 0.1s linear;
+        }
+
+        /* 伪造日志 */
+        .logs {
+            text-align: left;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.85rem;
+            color: #60cdff;
+            opacity: 0.9;
+            height: 80px;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        /* 冷酷极简结果页 */
+        #result-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        #result-text {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #ffffff;
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        /* 极简暗门按钮 */
+        .secret-btn {
+            background: none;
+            border: none;
+            color: #222;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            padding: 10px;
+            transition: color 0.5s ease;
+        }
+
+        .secret-btn:hover {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="win-bg" id="win-background"></div>
+
+    <div class="container" id="main-container">
+        <div class="glass-card">
+            
+            <div id="input-box">
+                <h1>你是男的女的？</h1>
+                <div class="input-group">
+                    <input type="text" id="gender-input" placeholder="请在此自主输入您的性别..." autocomplete="off">
+                </div>
+                <button class="btn" onclick="startAnalysis()">开始系统检测</button>
+            </div>
+
+            <div id="loading-box" class="loading-box">
+                <h1>深度数据逆向破译中</h1>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="logs" id="log-text"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <div id="result-text"></div>
+        <button class="secret-btn" onclick="resetSystem()">[ RETURN ]</button>
+    </div>
+
+    <script>
+        // --- 核心业务逻辑脚本 ---
+        const logTemplates = [
+            "正在初始化云端神经元映射网格...",
+            "正在捕获当前页面文本语义特征向量...",
+            "正在重定向至分布式系统并比对核实...",
+            "逻辑校准完成，判定中...",
+            "正在生成最终绝对理性检测报告..."
+        ];
+
+        function startAnalysis() {
+            const inputVal = document.getElementById('gender-input').value.trim();
+            
+            document.getElementById('input-box').style.display = 'none';
+            document.getElementById('loading-box').style.display = 'block';
+
+            const progressBar = document.getElementById('progress-bar');
+            const logText = document.getElementById('log-text');
+            
+            let progress = 0;
+            const totalTime = Math.random() * 2000 + 3000; 
+            const intervalTime = 50; 
+            const step = (intervalTime / totalTime) * 100;
+
+            const timer = setInterval(() => {
+                progress += step;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(timer);
+                    showResult(inputVal);
+                }
+                progressBar.style.width = `${progress}%`;
+
+                let logIndex = Math.floor((progress / 100) * logTemplates.length);
+                if (logIndex >= logTemplates.length) logIndex = logTemplates.length - 1;
+                
+                let currentLogs = "";
+                for(let i = 0; i <= logIndex; i++) {
+                    currentLogs += `&gt; ${logTemplates[i]}<br>`;
+                }
+                logText.innerHTML = currentLogs;
+            }, intervalTime);
+        }
+
+        function showResult(userInput) {
+            const resultScreen = document.getElementById('result-screen');
+            const resultText = document.getElementById('result-text');
+
+            if (userInput === "") {
+                resultText.innerText = "结果：无机物";
+            } else {
+                resultText.innerText = `结果：${userInput}`;
+            }
+
+            // 瞬间切断华丽背景，进入冷酷纯黑
+            document.getElementById('main-container').style.opacity = '0';
+            document.getElementById('win-background').style.opacity = '0';
+            
+            setTimeout(() => {
+                resultScreen.style.pointerEvents = 'auto';
+                resultScreen.style.opacity = '1';
+            }, 500); 
+        }
+
+        function resetSystem() {
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.style.opacity = '0';
+            resultScreen.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                document.getElementById('gender-input').value = "";
+                document.getElementById('progress-bar').style.width = "0%";
+                document.getElementById('log-text').innerHTML = "";
+                
+                document.getElementById('input-box').style.display = 'block';
+                document.getElementById('loading-box').style.display = 'none';
+                
+                document.getElementById('main-container').style.opacity = '1';
+                document.getElementById('win-background').style.opacity = '1';
+            }, 800);
+        }
+    </script>
+</body>
+</html>
