@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奇思妙想空间站</title>
+    <title>个人空间站</title>
     <style>
         /* 基础样式重置 */
         * {
@@ -21,8 +21,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         /* 头部标题区 */
@@ -45,6 +44,26 @@
             font-size: 1rem;
         }
 
+        /* 区域分界线与标题 */
+        .section-title {
+            width: 100%;
+            max-width: 1200px;
+            font-size: 1.25rem;
+            color: #8b949e;
+            margin: 30px 0 15px 20px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, #30363d, transparent);
+            margin-left: 15px;
+        }
+
         /* 卡片网格布局 */
         .container {
             display: grid;
@@ -52,7 +71,7 @@
             gap: 25px;
             max-width: 1200px;
             width: 100%;
-            padding: 0 20px;
+            margin-bottom: 40px;
         }
 
         /* 基础卡片样式 */
@@ -78,15 +97,18 @@
             background-color: #1f242c;
         }
 
+        /* 正经内容卡片专属悬浮效果 */
+        .card.serious:hover {
+            transform: translateY(-5px);
+            border-color: #7ef19d;
+            box-shadow: 0 10px 30px rgba(126, 241, 157, 0.1);
+            background-color: #1f2c24;
+        }
+
         /* 开发中卡片样式 */
         .card.developing {
             cursor: not-allowed;
             opacity: 0.6;
-        }
-        
-        .card.developing:hover {
-            border-color: #f0883e;
-            box-shadow: 0 0 15px rgba(240, 136, 62, 0.1);
         }
 
         /* 卡片内头部（图标与标题） */
@@ -134,6 +156,11 @@
             color: #58a6ff;
         }
 
+        .status-badge.tool {
+            background-color: rgba(126, 241, 157, 0.15);
+            color: #7ef19d;
+        }
+
         .status-badge.pending {
             background-color: rgba(240, 136, 62, 0.15);
             color: #f0883e;
@@ -143,19 +170,21 @@
         @media (max-width: 600px) {
             header h1 { font-size: 2rem; }
             .container { grid-template-columns: 1fr; }
+            .section-title { margin-left: 0; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>奇思妙想空间站</h1>
-        <p>捕捉一闪而过的电子灵感</p>
+        <h1>个人空间站</h1>
+        <p>探索、思考与灵感的汇聚地</p>
     </header>
 
+    <div class="section-title">✨ 奇思妙想</div>
     <div class="container">
 
-        <a href="性别检测.html" class="card active" target="_blank">
+        <a href="#" class="card active" target="_blank">
             <span class="status-badge online">已上线</span>
             <div class="card-header">
                 <span class="card-icon">🧬</span>
@@ -182,14 +211,19 @@
             <p class="card-desc">为仿生人量身定制的深夜梦境发生器。</p>
         </div>
 
-        <div class="card developing">
-            <span class="status-badge pending">未定义</span>
+    </div>
+
+    <div class="section-title">📊 理性探索</div>
+    <div class="container">
+
+        <a href="PHQ-9.html" class="card serious" target="_blank">
+            <span class="status-badge tool">专业量表</span>
             <div class="card-header">
-                <span class="card-icon">✨</span>
-                <h2 class="card-title">未知空间</h2>
+                <span class="card-icon">📝</span>
+                <h2 class="card-title">PHQ-9 自测表</h2>
             </div>
-            <p class="card-desc">下一个一闪而过的灵感，将在此处降落。</p>
-        </div>
+            <p class="card-desc">病人健康问卷（Patient Health Questionnaire-9），用于情绪状态的自我评估与筛查。</p>
+        </a>
 
     </div>
 
