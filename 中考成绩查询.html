@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>上海市中考成绩查询系统</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Microsoft YaHei", sans-serif;
+        background: #f2f4f7;
+    }
+
+    .header {
+        background: #0b57d0;
+        color: white;
+        padding: 18px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .container {
+        width: 420px;
+        margin: 40px auto;
+        background: white;
+        padding: 24px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #0b57d0;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #0948b8;
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+        color: #555;
+    }
+
+    .result {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .score {
+        font-size: 18px;
+        font-weight: bold;
+        color: #0b57d0;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    上海市中考成绩查询系统
+</div>
+
+<div class="container">
+
+    <input id="examId" placeholder="请输入准考证号"/>
+    <button onclick="query()">查询成绩</button>
+
+    <div class="loading" id="loading">
+        正在连接数据库服务器...<br/>
+        正在获取成绩信息...
+    </div>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+function rand(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function query(){
+    const id = document.getElementById("examId").value;
+    if(!id){
+        alert("请输入准考证号");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("result").style.display = "none";
+
+    setTimeout(() => {
+
+        // 各科随机成绩
+        const subjects = {
+            "语文": rand(80, 120),
+            "数学": rand(70, 120),
+            "英语": rand(75, 120),
+            "物理": rand(60, 100),
+            "化学": rand(60, 100),
+            "历史": rand(50, 80),
+            "道德与法治": rand(50, 80)
+        };
+
+        let total = 0;
+        for(let k in subjects) total += subjects[k];
+
+        const maxScore = 750;
+        const population = 50000;
+
+        // 简单排名算法（高分更靠前）
+        const rank = Math.max(1,
+            Math.floor((1 - total / maxScore) * (1 - total / maxScore) * population)
+        );
+
+        let html = `<div class="score">查询成功</div>`;
+        html += `<p>准考证号：${id}</p>`;
+        html += `<p>总分：${total} / ${maxScore}</p>`;
+        html += `<p>全市排名：第 ${rank} 名</p>`;
+        html += `<hr/>`;
+        html += `<b>各科成绩：</b><br/>`;
+
+        for(let k in subjects){
+            html += `${k}：${subjects[k]}<br/>`;
+        }
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("result").innerHTML = html;
+        document.getElementById("result").style.display = "block";
+
+    }, 2500); // 模拟“服务器繁忙”
+}
+</script>
+
+</body>
+</html>
