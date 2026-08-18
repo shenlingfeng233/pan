@@ -1,0 +1,3652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+
+<title>AI Translator</title>
+
+<style>
+:root {
+    color-scheme: light dark;
+
+    --bg: #f5f5f7;
+    --card: #ffffff;
+    --card-secondary: #f0f0f2;
+    --text: #1d1d1f;
+    --secondary: #6e6e73;
+    --border: #d2d2d7;
+
+    --accent: #007aff;
+    --accent-hover: #006ee6;
+
+    --danger: #ff3b30;
+    --success: #34c759;
+    --machine: #ff9500;
+
+    --input-bg: #fafafa;
+
+    --shadow:
+        0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #101010;
+        --card: #1c1c1e;
+        --card-secondary: #2c2c2e;
+        --text: #f5f5f7;
+        --secondary: #98989d;
+        --border: #38383a;
+
+        --accent: #0a84ff;
+        --accent-hover: #409cff;
+
+        --danger: #ff453a;
+        --success: #30d158;
+        --machine: #ff9f0a;
+
+        --input-bg: #151515;
+
+        --shadow:
+            0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Microsoft YaHei",
+        "Noto Sans CJK SC",
+        sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   App
+========================================================= */
+
+.app {
+    width: min(
+        1400px,
+        calc(100% - 32px)
+    );
+
+    margin: 0 auto;
+
+    padding:
+        28px
+        0
+        40px;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--accent);
+    color: white;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.logo-title {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.logo-subtitle {
+    color: var(--secondary);
+
+    font-size: 13px;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   Buttons
+========================================================= */
+
+.btn {
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        var(--card);
+
+    color:
+        var(--text);
+
+    border-radius: 9px;
+
+    padding:
+        9px
+        14px;
+
+    transition:
+        background 0.15s,
+        border-color 0.15s,
+        opacity 0.15s;
+}
+
+.btn:hover {
+    background:
+        var(--card-secondary);
+}
+
+.btn.primary {
+    background:
+        var(--accent);
+
+    color:
+        white;
+
+    border-color:
+        var(--accent);
+}
+
+.btn.primary:hover {
+    background:
+        var(--accent-hover);
+}
+
+.btn.danger {
+    color:
+        var(--danger);
+}
+
+.btn:disabled {
+    opacity:
+        0.5;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================================
+   Translator
+========================================================= */
+
+.translator {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 16px;
+}
+
+.panel {
+    background:
+        var(--card);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        16px;
+
+    box-shadow:
+        var(--shadow);
+
+    overflow:
+        hidden;
+
+    transition:
+        border-color 0.2s;
+}
+
+.panel.machine-mode {
+    border-color:
+        var(--machine);
+}
+
+
+/* =========================================================
+   Panel header
+========================================================= */
+
+.panel-header {
+    min-height:
+        58px;
+
+    padding:
+        10px
+        14px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+}
+
+.language-controls {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+}
+
+.language-select {
+    border:
+        0;
+
+    outline:
+        none;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+
+    font-weight:
+        600;
+
+    padding:
+        6px;
+
+    border-radius:
+        7px;
+}
+
+.language-select:hover {
+    background:
+        var(--card-secondary);
+}
+
+.panel-actions {
+    display:
+        flex;
+
+    gap:
+        5px;
+}
+
+.icon-btn {
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--secondary);
+
+    border-radius:
+        8px;
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    font-size:
+        17px;
+}
+
+.icon-btn:hover {
+    background:
+        var(--card-secondary);
+
+    color:
+        var(--text);
+}
+
+
+/* =========================================================
+   Input
+========================================================= */
+
+.text-area {
+    width:
+        100%;
+
+    min-height:
+        420px;
+
+    resize:
+        vertical;
+
+    border:
+        0;
+
+    outline:
+        none;
+
+    padding:
+        20px;
+
+    background:
+        var(--input-bg);
+
+    color:
+        var(--text);
+
+    font-size:
+        16px;
+
+    line-height:
+        1.7;
+}
+
+.text-area::placeholder {
+    color:
+        var(--secondary);
+}
+
+
+/* =========================================================
+   Output
+========================================================= */
+
+.output {
+    min-height:
+        420px;
+
+    padding:
+        20px;
+
+    background:
+        var(--input-bg);
+
+    font-size:
+        16px;
+
+    line-height:
+        1.7;
+
+    overflow:
+        auto;
+
+    word-break:
+        break-word;
+
+    overflow-wrap:
+        anywhere;
+}
+
+.output.empty {
+    color:
+        var(--secondary);
+}
+
+.output.error {
+    color:
+        var(--danger);
+}
+
+
+/* =========================================================
+   Translation result
+========================================================= */
+
+.translation-result {
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
+
+    overflow-wrap:
+        anywhere;
+}
+
+.translation-text {
+    white-space:
+        pre-wrap;
+}
+
+.pronunciation {
+    margin-top:
+        14px;
+
+    padding-top:
+        12px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    color:
+        var(--secondary);
+
+    font-size:
+        14px;
+
+    line-height:
+        1.8;
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
+
+    overflow-wrap:
+        anywhere;
+}
+
+.pronunciation-label {
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+
+    opacity:
+        0.8;
+
+    margin-bottom:
+        4px;
+}
+
+
+/* =========================================================
+   Ruby
+========================================================= */
+
+ruby {
+    ruby-position:
+        over;
+}
+
+rt {
+    color:
+        var(--secondary);
+
+    font-size:
+        0.55em;
+
+    line-height:
+        1;
+}
+
+
+/* =========================================================
+   Status
+========================================================= */
+
+.status-bar {
+    min-height:
+        42px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    padding:
+        8px
+        14px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    color:
+        var(--secondary);
+
+    font-size:
+        13px;
+}
+
+.status {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+}
+
+.status-dot {
+    width:
+        7px;
+
+    height:
+        7px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--secondary);
+}
+
+.status-dot.running {
+    background:
+        var(--accent);
+
+    animation:
+        pulse 1s infinite;
+}
+
+.status-dot.success {
+    background:
+        var(--success);
+}
+
+.status-dot.error {
+    background:
+        var(--danger);
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity:
+            0.3;
+    }
+
+    50% {
+        opacity:
+            1;
+    }
+}
+
+
+/* =========================================================
+   Controls
+========================================================= */
+
+.controls {
+    margin-top:
+        16px;
+
+    background:
+        var(--card);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        14px;
+
+    padding:
+        12px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    flex-wrap:
+        wrap;
+}
+
+.control-group {
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+}
+
+.control-label {
+    color:
+        var(--secondary);
+
+    font-size:
+        13px;
+
+    white-space:
+        nowrap;
+}
+
+.control-select {
+    min-width:
+        125px;
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        var(--input-bg);
+
+    color:
+        var(--text);
+
+    border-radius:
+        8px;
+
+    padding:
+        8px
+        10px;
+
+    outline:
+        none;
+}
+
+.control-select:focus {
+    border-color:
+        var(--accent);
+}
+
+.control-select.machine-mode {
+    border-color:
+        var(--machine);
+}
+
+.spacer {
+    flex:
+        1;
+}
+
+.translate-btn {
+    min-width:
+        120px;
+}
+
+
+/* =========================================================
+   Pronunciation toggle
+========================================================= */
+
+.switch {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+.switch input {
+    display:
+        none;
+}
+
+.switch-slider {
+    width:
+        38px;
+
+    height:
+        22px;
+
+    border-radius:
+        999px;
+
+    background:
+        var(--border);
+
+    position:
+        relative;
+
+    transition:
+        background 0.2s;
+}
+
+.switch-slider::after {
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        3px;
+
+    left:
+        3px;
+
+    width:
+        16px;
+
+    height:
+        16px;
+
+    border-radius:
+        50%;
+
+    background:
+        white;
+
+    transition:
+        transform 0.2s;
+}
+
+.switch input:checked
++ .switch-slider {
+    background:
+        var(--accent);
+}
+
+.switch input:checked
++ .switch-slider::after {
+    transform:
+        translateX(16px);
+}
+
+.switch-text {
+    color:
+        var(--secondary);
+
+    font-size:
+        13px;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   Settings
+========================================================= */
+
+.settings-overlay {
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    background:
+        rgba(0, 0, 0, 0.45);
+
+    backdrop-filter:
+        blur(4px);
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    z-index:
+        100;
+}
+
+.settings-overlay.show {
+    display:
+        flex;
+}
+
+.settings {
+    width:
+        min(620px, 100%);
+
+    max-height:
+        min(760px, calc(100vh - 40px));
+
+    overflow-y:
+        auto;
+
+    background:
+        var(--card);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+.settings-header {
+    padding:
+        18px
+        20px;
+
+    border-bottom:
+        1px solid
+        var(--border);
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+}
+
+.settings-title {
+    font-size:
+        19px;
+
+    font-weight:
+        700;
+}
+
+.settings-body {
+    padding:
+        20px;
+}
+
+.field {
+    margin-bottom:
+        18px;
+}
+
+.field:last-child {
+    margin-bottom:
+        0;
+}
+
+.field-label {
+    display:
+        block;
+
+    margin-bottom:
+        7px;
+
+    font-size:
+        14px;
+
+    font-weight:
+        600;
+}
+
+.field-description {
+    margin-top:
+        5px;
+
+    color:
+        var(--secondary);
+
+    font-size:
+        12px;
+
+    line-height:
+        1.5;
+}
+
+.field input {
+    width:
+        100%;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        9px;
+
+    background:
+        var(--input-bg);
+
+    color:
+        var(--text);
+
+    padding:
+        10px
+        12px;
+
+    outline:
+        none;
+}
+
+.field input:focus {
+    border-color:
+        var(--accent);
+}
+
+.settings-footer {
+    padding:
+        14px
+        20px;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .translator {
+        grid-template-columns:
+            1fr;
+    }
+
+    .text-area,
+    .output {
+        min-height:
+            300px;
+    }
+
+    .spacer {
+        display:
+            none;
+    }
+
+    .translate-btn {
+        width:
+            100%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .app {
+        width:
+            calc(100% - 20px);
+
+        padding-top:
+            15px;
+    }
+
+    .header {
+        align-items:
+            flex-start;
+    }
+
+    .logo-title {
+        font-size:
+            19px;
+    }
+
+    .logo-subtitle {
+        display:
+            none;
+    }
+
+    .controls {
+        align-items:
+            stretch;
+    }
+
+    .control-group {
+        width:
+            100%;
+    }
+
+    .control-select {
+        flex:
+            1;
+    }
+
+    .switch {
+        width:
+            100%;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         Header
+    ====================================================== -->
+
+    <header class="header">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                译
+            </div>
+
+            <div>
+
+                <div class="logo-title">
+                    AI Translator
+                </div>
+
+                <div class="logo-subtitle">
+                    Powered by your own API
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <button
+                class="btn"
+                id="settingsBtn">
+                设置
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         Translator
+    ====================================================== -->
+
+    <main>
+
+        <div class="translator">
+
+            <!-- =================================================
+                 Source
+            ================================================== -->
+
+            <section
+                class="panel"
+                id="sourcePanel">
+
+                <div class="panel-header">
+
+                    <div class="language-controls">
+
+                        <select
+                            id="sourceLanguage"
+                            class="language-select">
+                        </select>
+
+                    </div>
+
+
+                    <div class="panel-actions">
+
+                        <button
+                            class="icon-btn"
+                            id="clearBtn"
+                            title="清空">
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    id="sourceText"
+                    class="text-area"
+                    placeholder="输入需要翻译的内容……"
+                    spellcheck="false"></textarea>
+
+
+                <div class="status-bar">
+
+                    <div class="status">
+
+                        <span
+                            class="status-dot"
+                            id="sourceDot">
+                        </span>
+
+                        <span id="sourceStatus">
+                            等待输入
+                        </span>
+
+                    </div>
+
+
+                    <span id="sourceCount">
+                        0 字符
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 Target
+            ================================================== -->
+
+            <section
+                class="panel"
+                id="targetPanel">
+
+                <div class="panel-header">
+
+                    <div class="language-controls">
+
+                        <select
+                            id="targetLanguage"
+                            class="language-select">
+                        </select>
+
+                    </div>
+
+
+                    <div class="panel-actions">
+
+                        <button
+                            class="icon-btn"
+                            id="copyBtn"
+                            title="复制译文">
+                            ⧉
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="output"
+                    class="output empty">
+
+                    翻译结果将在这里显示……
+
+                </div>
+
+
+                <div class="status-bar">
+
+                    <div class="status">
+
+                        <span
+                            class="status-dot"
+                            id="targetDot">
+                        </span>
+
+                        <span id="targetStatus">
+                            等待翻译
+                        </span>
+
+                    </div>
+
+
+                    <span id="targetCount">
+                        0 字符
+                    </span>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- =====================================================
+             Controls
+        ====================================================== -->
+
+        <div class="controls">
+
+            <!-- Translation mode -->
+
+            <div class="control-group">
+
+                <span class="control-label">
+                    模式
+                </span>
+
+
+                <select
+                    id="translationMode"
+                    class="control-select">
+
+                    <option value="ai">
+                        AI 翻译
+                    </option>
+
+                    <option value="machine">
+                        机翻
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Style -->
+
+            <div class="control-group">
+
+                <span class="control-label">
+                    风格
+                </span>
+
+
+                <select
+                    id="styleSelect"
+                    class="control-select">
+
+                    <option value="natural">
+                        自然
+                    </option>
+
+                    <option value="formal">
+                        正式
+                    </option>
+
+                    <option value="casual">
+                        日常
+                    </option>
+
+                    <option value="academic">
+                        学术
+                    </option>
+
+                    <option value="anime">
+                        游戏 / 动漫
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Target language -->
+
+            <div class="control-group">
+
+                <span class="control-label">
+                    目标语言
+                </span>
+
+
+                <select
+                    id="quickTarget"
+                    class="control-select">
+                </select>
+
+            </div>
+
+
+            <!-- Pronunciation -->
+
+            <label
+                class="switch"
+                title="让 AI 同时生成目标语言的读音">
+
+                <input
+                    type="checkbox"
+                    id="pronunciationToggle">
+
+                <span class="switch-slider"></span>
+
+                <span class="switch-text">
+                    显示注音
+                </span>
+
+            </label>
+
+
+            <div class="spacer"></div>
+
+
+            <button
+                class="btn danger"
+                id="stopBtn"
+                disabled>
+
+                停止
+
+            </button>
+
+
+            <button
+                class="btn"
+                id="retryBtn">
+
+                重新翻译
+
+            </button>
+
+
+            <button
+                class="btn primary translate-btn"
+                id="translateBtn">
+
+                翻译
+
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     Settings
+========================================================== -->
+
+<div
+    class="settings-overlay"
+    id="settingsOverlay">
+
+    <div class="settings">
+
+        <div class="settings-header">
+
+            <div class="settings-title">
+                API 设置
+            </div>
+
+
+            <button
+                class="icon-btn"
+                id="closeSettings">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="settings-body">
+
+            <div class="field">
+
+                <label class="field-label">
+                    API 地址
+                </label>
+
+
+                <input
+                    id="apiUrl"
+                    type="text"
+                    placeholder="https://api.example.com/v1/chat/completions">
+
+
+                <div class="field-description">
+
+                    使用 OpenAI Chat Completions
+                    兼容接口。
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="field-label">
+                    API Key
+                </label>
+
+
+                <input
+                    id="apiKey"
+                    type="password"
+                    placeholder="sk-xxxxxxxx">
+
+
+                <div class="field-description">
+
+                    API Key 仅保存在当前浏览器的
+                    localStorage 中。
+
+                    请求会直接发送到你填写的 API 地址。
+
+                </div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="field-label">
+                    Model
+                </label>
+
+
+                <input
+                    id="model"
+                    type="text"
+                    placeholder="例如 gpt-4o-mini">
+
+
+                <div class="field-description">
+
+                    填写你的 API 服务商支持的模型名称。
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-footer">
+
+            <button
+                class="btn danger"
+                id="clearConfigBtn">
+
+                清除配置
+
+            </button>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                ">
+
+                <button
+                    class="btn"
+                    id="cancelSettings">
+
+                    取消
+
+                </button>
+
+
+                <button
+                    class="btn primary"
+                    id="saveSettings">
+
+                    保存
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   Languages
+========================================================= */
+
+const LANGUAGES = {
+
+    auto: "AI 自动判断",
+
+    zhCN: "简体中文",
+    zhTW: "繁體中文",
+
+    en: "English",
+    ja: "日本語",
+    ko: "한국어",
+
+    fr: "Français",
+    de: "Deutsch",
+    es: "Español",
+
+    pt: "Português",
+    ru: "Русский",
+    it: "Italiano",
+
+    ar: "العربية",
+    th: "ไทย",
+    vi: "Tiếng Việt",
+
+    nl: "Nederlands",
+    pl: "Polski",
+    tr: "Türkçe"
+};
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const sourceLanguage =
+    document.getElementById(
+        "sourceLanguage"
+    );
+
+const targetLanguage =
+    document.getElementById(
+        "targetLanguage"
+    );
+
+const quickTarget =
+    document.getElementById(
+        "quickTarget"
+    );
+
+const sourceText =
+    document.getElementById(
+        "sourceText"
+    );
+
+const output =
+    document.getElementById(
+        "output"
+    );
+
+const translateBtn =
+    document.getElementById(
+        "translateBtn"
+    );
+
+const retryBtn =
+    document.getElementById(
+        "retryBtn"
+    );
+
+const stopBtn =
+    document.getElementById(
+        "stopBtn"
+    );
+
+const copyBtn =
+    document.getElementById(
+        "copyBtn"
+    );
+
+const clearBtn =
+    document.getElementById(
+        "clearBtn"
+    );
+
+const styleSelect =
+    document.getElementById(
+        "styleSelect"
+    );
+
+const translationMode =
+    document.getElementById(
+        "translationMode"
+    );
+
+const pronunciationToggle =
+    document.getElementById(
+        "pronunciationToggle"
+    );
+
+const settingsBtn =
+    document.getElementById(
+        "settingsBtn"
+    );
+
+const settingsOverlay =
+    document.getElementById(
+        "settingsOverlay"
+    );
+
+const closeSettings =
+    document.getElementById(
+        "closeSettings"
+    );
+
+const cancelSettings =
+    document.getElementById(
+        "cancelSettings"
+    );
+
+const saveSettings =
+    document.getElementById(
+        "saveSettings"
+    );
+
+const clearConfigBtn =
+    document.getElementById(
+        "clearConfigBtn"
+    );
+
+const apiUrl =
+    document.getElementById(
+        "apiUrl"
+    );
+
+const apiKey =
+    document.getElementById(
+        "apiKey"
+    );
+
+const model =
+    document.getElementById(
+        "model"
+    );
+
+const sourceCount =
+    document.getElementById(
+        "sourceCount"
+    );
+
+const targetCount =
+    document.getElementById(
+        "targetCount"
+    );
+
+const sourceStatus =
+    document.getElementById(
+        "sourceStatus"
+    );
+
+const targetStatus =
+    document.getElementById(
+        "targetStatus"
+    );
+
+const targetDot =
+    document.getElementById(
+        "targetDot"
+    );
+
+const sourcePanel =
+    document.getElementById(
+        "sourcePanel"
+    );
+
+const targetPanel =
+    document.getElementById(
+        "targetPanel"
+    );
+
+
+/* =========================================================
+   State
+========================================================= */
+
+let controller = null;
+
+let isTranslating = false;
+
+let lastTranslationData = null;
+
+
+/* =========================================================
+   Language selects
+========================================================= */
+
+function populateLanguages() {
+
+    sourceLanguage.innerHTML = "";
+
+    targetLanguage.innerHTML = "";
+
+    quickTarget.innerHTML = "";
+
+
+    for (
+        const [key, name]
+        of Object.entries(LANGUAGES)
+    ) {
+
+        const sourceOption =
+            document.createElement(
+                "option"
+            );
+
+        sourceOption.value =
+            key;
+
+        sourceOption.textContent =
+            name;
+
+        sourceLanguage.appendChild(
+            sourceOption
+        );
+
+
+        if (key !== "auto") {
+
+            const targetOption =
+                document.createElement(
+                    "option"
+                );
+
+            targetOption.value =
+                key;
+
+            targetOption.textContent =
+                name;
+
+            targetLanguage.appendChild(
+                targetOption
+            );
+
+
+            const quickOption =
+                document.createElement(
+                    "option"
+                );
+
+            quickOption.value =
+                key;
+
+            quickOption.textContent =
+                name;
+
+            quickTarget.appendChild(
+                quickOption
+            );
+        }
+    }
+
+
+    sourceLanguage.value =
+        "auto";
+
+    targetLanguage.value =
+        "en";
+
+    quickTarget.value =
+        "en";
+}
+
+populateLanguages();
+
+
+/* =========================================================
+   Local config
+========================================================= */
+
+function loadConfig() {
+
+    try {
+
+        const config =
+            JSON.parse(
+                localStorage.getItem(
+                    "aiTranslatorConfig"
+                ) || "{}"
+            );
+
+
+        apiUrl.value =
+            config.apiUrl || "";
+
+        apiKey.value =
+            config.apiKey || "";
+
+        model.value =
+            config.model || "";
+
+
+    } catch {
+
+        apiUrl.value = "";
+
+        apiKey.value = "";
+
+        model.value = "";
+    }
+}
+
+
+function saveConfig() {
+
+    const config = {
+
+        apiUrl:
+            apiUrl.value.trim(),
+
+        apiKey:
+            apiKey.value.trim(),
+
+        model:
+            model.value.trim()
+    };
+
+
+    localStorage.setItem(
+        "aiTranslatorConfig",
+        JSON.stringify(config)
+    );
+}
+
+
+loadConfig();
+
+
+/* =========================================================
+   Settings
+========================================================= */
+
+function openSettings() {
+
+    settingsOverlay.classList.add(
+        "show"
+    );
+
+    loadConfig();
+}
+
+
+function closeSettingsPanel() {
+
+    settingsOverlay.classList.remove(
+        "show"
+    );
+}
+
+
+settingsBtn.addEventListener(
+    "click",
+    openSettings
+);
+
+
+closeSettings.addEventListener(
+    "click",
+    closeSettingsPanel
+);
+
+
+cancelSettings.addEventListener(
+    "click",
+    closeSettingsPanel
+);
+
+
+settingsOverlay.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target ===
+            settingsOverlay
+        ) {
+
+            closeSettingsPanel();
+        }
+    }
+);
+
+
+saveSettings.addEventListener(
+    "click",
+    () => {
+
+        if (
+            !apiUrl.value.trim()
+        ) {
+
+            alert(
+                "请输入 API 地址。"
+            );
+
+            return;
+        }
+
+
+        if (
+            !apiKey.value.trim()
+        ) {
+
+            alert(
+                "请输入 API Key。"
+            );
+
+            return;
+        }
+
+
+        if (
+            !model.value.trim()
+        ) {
+
+            alert(
+                "请输入 Model。"
+            );
+
+            return;
+        }
+
+
+        saveConfig();
+
+        closeSettingsPanel();
+    }
+);
+
+
+clearConfigBtn.addEventListener(
+    "click",
+    () => {
+
+        if (
+            !confirm(
+                "确定要清除保存的 API 配置吗？"
+            )
+        ) {
+            return;
+        }
+
+
+        localStorage.removeItem(
+            "aiTranslatorConfig"
+        );
+
+
+        apiUrl.value = "";
+
+        apiKey.value = "";
+
+        model.value = "";
+    }
+);
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateCount() {
+
+    sourceCount.textContent =
+        `${sourceText.value.length} 字符`;
+
+
+    targetCount.textContent =
+        `${output.textContent.length} 字符`;
+}
+
+
+sourceText.addEventListener(
+    "input",
+    updateCount
+);
+
+
+function setStatus(
+    type,
+    text
+) {
+
+    targetDot.className =
+        "status-dot";
+
+
+    if (
+        type === "running"
+    ) {
+
+        targetDot.classList.add(
+            "running"
+        );
+
+    } else if (
+        type === "success"
+    ) {
+
+        targetDot.classList.add(
+            "success"
+        );
+
+    } else if (
+        type === "error"
+    ) {
+
+        targetDot.classList.add(
+            "error"
+        );
+    }
+
+
+    targetStatus.textContent =
+        text;
+}
+
+
+function setOutputText(
+    text
+) {
+
+    output.className =
+        "output";
+
+
+    output.textContent =
+        text;
+
+
+    updateCount();
+}
+
+
+function setOutputEmpty(
+    text
+) {
+
+    output.className =
+        "output empty";
+
+
+    output.textContent =
+        text;
+
+
+    updateCount();
+}
+
+
+function setOutputError(
+    text
+) {
+
+    output.className =
+        "output error";
+
+
+    output.textContent =
+        text;
+
+
+    updateCount();
+}
+
+
+/* =========================================================
+   Mode UI
+========================================================= */
+
+function updateModeUI() {
+
+    const machine =
+        translationMode.value ===
+        "machine";
+
+
+    translationMode.classList.toggle(
+        "machine-mode",
+        machine
+    );
+
+
+    sourcePanel.classList.toggle(
+        "machine-mode",
+        machine
+    );
+
+
+    targetPanel.classList.toggle(
+        "machine-mode",
+        machine
+    );
+
+
+    if (
+        machine &&
+        !isTranslating
+    ) {
+
+        targetStatus.textContent =
+            "机翻模式";
+
+    } else if (
+        !isTranslating
+    ) {
+
+        targetStatus.textContent =
+            "等待翻译";
+    }
+}
+
+
+translationMode.addEventListener(
+    "change",
+    updateModeUI
+);
+
+
+/* =========================================================
+   Pronunciation support
+========================================================= */
+
+const PRONUNCIATION_TYPES = {
+
+    zhCN: "汉语拼音",
+
+    zhTW: "注音符号",
+
+    ja: "日语罗马音",
+
+    ko: "韩语罗马音",
+
+    ru: "俄语拉丁转写",
+
+    ar: "阿拉伯语拉丁转写",
+
+    th: "泰语拉丁转写",
+
+    vi: "越南语读音标注"
+};
+
+
+function getPronunciationType(
+    language
+) {
+
+    return (
+        PRONUNCIATION_TYPES[
+            language
+        ] || null
+    );
+}
+
+
+/* =========================================================
+   System prompt
+========================================================= */
+
+function buildSystemPrompt() {
+
+    const mode =
+        translationMode.value;
+
+
+    const style =
+        styleSelect.value;
+
+
+    const pronunciation =
+        pronunciationToggle.checked;
+
+
+    const styleDescription = {
+
+        natural:
+            "使用自然、准确、符合目标语言母语者习惯的表达。",
+
+        formal:
+            "使用正式、专业、礼貌的表达。",
+
+        casual:
+            "使用自然、轻松、日常的表达。",
+
+        academic:
+            "使用严谨、准确、适合学术文本的表达。",
+
+        anime:
+            "如果语境适合，可以使用自然的游戏、动漫或网络文化表达，但不要擅自改变原意。"
+
+    }[style];
+
+
+    let pronunciationInstruction = "";
+
+
+    if (pronunciation) {
+
+        pronunciationInstruction = `
+
+用户要求同时提供目标语言的读音。
+
+目标语言对应的读音系统：
+
+- 简体中文：汉语拼音
+- 繁体中文：注音符号
+- 日语：罗马音
+- 韩语：韩语罗马化
+- 俄语：拉丁字母转写
+- 阿拉伯语：拉丁字母转写
+- 泰语：拉丁字母转写
+- 越南语：提供适合中文用户阅读的读音提示
+
+如果目标语言不适合提供常规注音，则返回空注音。
+
+注音必须与译文内容对应。
+
+不要使用 HTML。
+不要使用 Markdown。
+不要使用 <ruby>、<rt> 等标签。
+`;
+
+    }
+
+
+    /* =====================================================
+       AI translation
+    ====================================================== */
+
+    if (
+        mode === "ai"
+    ) {
+
+        return `
+你是一名专业 AI 翻译器。
+
+你的唯一任务是翻译用户提供的文本。
+
+要求：
+
+1. 准确理解原文含义。
+2. 不擅自增加、删除或改变信息。
+3. 保持原文的段落、换行和列表结构。
+4. 保留 Markdown 格式。
+5. Markdown 代码块中的代码不要翻译。
+6. 不要解释翻译过程。
+7. 不要添加“翻译如下”“Translation:”等前缀。
+8. 不要回答原文中的问题，只翻译原文。
+9. 人名、品牌名、专有名词等根据目标语言习惯合理处理。
+10. ${styleDescription}
+
+${pronunciationInstruction}
+
+如果用户没有要求注音：
+
+只输出最终译文。
+
+如果用户要求注音：
+
+必须严格按照下面的 JSON 格式输出：
+
+{
+  "translation": "最终译文",
+  "pronunciation": "对应的读音"
+}
+
+不要输出 JSON 以外的任何内容。
+
+只输出最终结果。
+`.trim();
+    }
+
+
+    /* =====================================================
+       Machine translation
+    ====================================================== */
+
+    return `
+你是一台故意保持“机器翻译感”的直译翻译器。
+
+你的任务不是把文本翻译得优美，而是尽可能进行机械、字面、逐词、逐词素的翻译。
+
+必须遵守：
+
+1. 尽可能按照原文中的最小有意义词素、词语或短语进行拆分。
+2. 每一个词素或词语尽量独立翻译。
+3. 尽量保持原文词序。
+4. 不要为了符合目标语言习惯而重新组织句子。
+5. 不要主动润色。
+6. 不要主动修正原文。
+7. 不要根据上下文把明显的字面意思替换成更自然的表达。
+8. 对复合词，尽量拆成组成部分后分别翻译。
+9. 对品牌名、专有名词等，也尝试进行字面拆解。
+10. 如果一个词可以拆分成多个有意义的词素，应优先拆分。
+11. 如果一个词无法合理拆分，则整体直译。
+12. 保持原文的换行、段落、列表和 Markdown 结构。
+13. Markdown 代码块中的代码不要翻译。
+14. 不要解释你的翻译过程。
+15. 不要添加“翻译如下”“Translation:”等前缀。
+16. 只输出最终的机器式直译结果。
+
+例如：
+
+Microsoft
+
+不要默认把 Microsoft 当成一个必须保留的品牌名称。
+
+尝试分析：
+
+Micro + soft
+
+然后分别进行字面翻译。
+
+目标是得到类似：
+
+Gently soft
+
+这样的“机械直译感”结果，而不是正常人工翻译中的“微软”。
+
+注意：
+
+“逐字”优先指语言学意义上的最小词素、词语或短语，
+而不是强制把每一个 Unicode 字符单独翻译。
+
+例如一个英文复合词应该优先拆成有意义的组成部分，
+而不是简单地把每一个字母单独处理。
+
+${pronunciationInstruction}
+
+如果用户没有要求注音：
+
+只输出最终机器翻译。
+
+如果用户要求注音：
+
+必须严格按照下面的 JSON 格式输出：
+
+{
+  "translation": "机器直译结果",
+  "pronunciation": "对应的读音"
+}
+
+不要输出 JSON 以外的任何内容。
+
+只输出最终结果。
+`.trim();
+}
+
+
+/* =========================================================
+   User prompt
+========================================================= */
+
+function buildUserPrompt(
+    text
+) {
+
+    const source =
+        sourceLanguage.value ===
+        "auto"
+
+            ? "AI 自动检测"
+
+            : getLanguageName(
+                sourceLanguage.value
+            );
+
+
+    const target =
+        getTargetLanguage();
+
+
+    const targetDescription =
+        target === "auto"
+
+            ? "AI 自动判断目标语言"
+
+            : getLanguageName(
+                target
+            );
+
+
+    const modeName =
+        translationMode.value ===
+        "machine"
+
+            ? "机翻模式"
+
+            : "AI 自然翻译模式";
+
+
+    const pronunciation =
+        pronunciationToggle.checked;
+
+
+    return `
+翻译模式：${modeName}
+
+源语言：
+${source}
+
+目标语言：
+${targetDescription}
+
+是否需要注音：
+${pronunciation ? "是" : "否"}
+
+需要翻译的文本：
+
+${text}
+`.trim();
+}
+
+
+/* =========================================================
+   Get target language
+========================================================= */
+
+function getTargetLanguage() {
+
+    return targetLanguage.value;
+}
+
+
+function getLanguageName(
+    key
+) {
+
+    return (
+        LANGUAGES[key] ||
+        key
+    );
+}
+
+
+/* =========================================================
+   JSON extraction
+========================================================= */
+
+function extractJSON(
+    text
+) {
+
+    text =
+        text.trim();
+
+
+    /*
+     * 去掉可能存在的 Markdown
+     * JSON 代码块
+     */
+
+    text =
+        text
+            .replace(
+                /^```json\s*/i,
+                ""
+            )
+            .replace(
+                /^```\s*/i,
+                ""
+            )
+            .replace(
+                /\s*```$/i,
+                ""
+            )
+            .trim();
+
+
+    try {
+
+        return JSON.parse(
+            text
+        );
+
+    } catch {}
+
+
+    /*
+     * 尝试寻找第一个 JSON 对象
+     */
+
+    const first =
+        text.indexOf("{");
+
+
+    const last =
+        text.lastIndexOf("}");
+
+
+    if (
+        first !== -1 &&
+        last > first
+    ) {
+
+        try {
+
+            return JSON.parse(
+                text.slice(
+                    first,
+                    last + 1
+                )
+            );
+
+        } catch {}
+    }
+
+
+    return null;
+}
+
+
+/* =========================================================
+   Render translation
+========================================================= */
+
+function renderTranslation(
+    translation,
+    pronunciation
+) {
+
+    output.className =
+        "output";
+
+
+    output.innerHTML = "";
+
+
+    const result =
+        document.createElement(
+            "div"
+        );
+
+    result.className =
+        "translation-result";
+
+
+    const translationDiv =
+        document.createElement(
+            "div"
+        );
+
+    translationDiv.className =
+        "translation-text";
+
+
+    /*
+     * 这里使用 textContent，
+     * 因此模型返回的 Markdown
+     * 不会执行成 HTML。
+     */
+
+    translationDiv.textContent =
+        translation;
+
+
+    result.appendChild(
+        translationDiv
+    );
+
+
+    if (
+        pronunciation &&
+        pronunciation.trim()
+    ) {
+
+        const pronunciationDiv =
+            document.createElement(
+                "div"
+            );
+
+        pronunciationDiv.className =
+            "pronunciation";
+
+
+        const label =
+            document.createElement(
+                "div"
+            );
+
+        label.className =
+            "pronunciation-label";
+
+        label.textContent =
+            "注音";
+
+
+        const pronunciationText =
+            document.createElement(
+                "div"
+            );
+
+        pronunciationText.textContent =
+            pronunciation;
+
+
+        pronunciationDiv.appendChild(
+            label
+        );
+
+        pronunciationDiv.appendChild(
+            pronunciationText
+        );
+
+
+        result.appendChild(
+            pronunciationDiv
+        );
+    }
+
+
+    output.appendChild(
+        result
+    );
+
+
+    updateCount();
+}
+
+
+/* =========================================================
+   Streaming parser
+========================================================= */
+
+function extractDelta(
+    data
+) {
+
+    const choice =
+        data?.choices?.[0];
+
+
+    if (!choice) {
+        return "";
+    }
+
+
+    const delta =
+        choice?.delta?.content;
+
+
+    if (
+        typeof delta ===
+        "string"
+    ) {
+
+        return delta;
+    }
+
+
+    const messageContent =
+        choice?.message?.content;
+
+
+    if (
+        typeof messageContent ===
+        "string"
+    ) {
+
+        return messageContent;
+    }
+
+
+    return "";
+}
+
+
+/* =========================================================
+   Translation
+========================================================= */
+
+async function translate() {
+
+    const text =
+        sourceText.value.trim();
+
+
+    if (!text) {
+
+        setOutputError(
+            "请先输入需要翻译的内容。"
+        );
+
+        return;
+    }
+
+
+    loadConfig();
+
+
+    const url =
+        apiUrl.value.trim();
+
+    const key =
+        apiKey.value.trim();
+
+    const selectedModel =
+        model.value.trim();
+
+
+    if (
+        !url ||
+        !key ||
+        !selectedModel
+    ) {
+
+        setOutputError(
+            "请先在右上角“设置”中填写 API 地址、API Key 和 Model。"
+        );
+
+
+        openSettings();
+
+        return;
+    }
+
+
+    if (isTranslating) {
+        return;
+    }
+
+
+    isTranslating = true;
+
+
+    controller =
+        new AbortController();
+
+
+    translateBtn.disabled =
+        true;
+
+    retryBtn.disabled =
+        true;
+
+    stopBtn.disabled =
+        false;
+
+
+    setOutputText("");
+
+
+    setStatus(
+        "running",
+
+        translationMode.value ===
+        "machine"
+
+            ? "正在进行机翻……"
+
+            : "正在翻译……"
+    );
+
+
+    const usePronunciation =
+        pronunciationToggle.checked;
+
+
+    const target =
+        getTargetLanguage();
+
+
+    const pronunciationType =
+        getPronunciationType(
+            target
+        );
+
+
+    /*
+     * 如果用户打开注音，
+     * 但目标语言不支持，
+     * 仍然让模型判断。
+     */
+
+    if (
+        usePronunciation &&
+        !pronunciationType
+    ) {
+
+        console.info(
+            "当前目标语言没有预设注音系统，将由模型自行决定是否提供读音。"
+        );
+    }
+
+
+    const userPrompt =
+        buildUserPrompt(
+            text
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+
+                    method:
+                        "POST",
+
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${key}`
+                    },
+
+
+                    body:
+                        JSON.stringify({
+
+                            model:
+                                selectedModel,
+
+                            stream:
+                                true,
+
+                            messages: [
+
+                                {
+                                    role:
+                                        "system",
+
+                                    content:
+                                        buildSystemPrompt()
+                                },
+
+                                {
+                                    role:
+                                        "user",
+
+                                    content:
+                                        userPrompt
+                                }
+
+                            ]
+                        }),
+
+
+                    signal:
+                        controller.signal
+                }
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            let errorText =
+                "";
+
+
+            try {
+
+                errorText =
+                    await response.text();
+
+            } catch {}
+
+
+            throw new Error(
+                `HTTP ${response.status}` +
+                (
+                    errorText
+
+                        ? `: ${errorText.slice(
+                            0,
+                            800
+                        )}`
+
+                        : ""
+                )
+            );
+        }
+
+
+        if (
+            !response.body
+        ) {
+
+            throw new Error(
+                "API 没有返回可读取的数据流。"
+            );
+        }
+
+
+        const reader =
+            response.body.getReader();
+
+
+        const decoder =
+            new TextDecoder(
+                "utf-8"
+            );
+
+
+        let buffer =
+            "";
+
+        let rawResult =
+            "";
+
+
+        /*
+         * 普通翻译模式下可以直接显示流式文本。
+         *
+         * 注音模式使用 JSON，
+         * 所以等 JSON 完整后再显示，
+         * 避免半截 JSON 直接显示到页面。
+         */
+
+        while (true) {
+
+            const {
+                value,
+                done
+            } =
+                await reader.read();
+
+
+            if (done) {
+                break;
+            }
+
+
+            buffer +=
+                decoder.decode(
+                    value,
+                    {
+                        stream:
+                            true
+                    }
+                );
+
+
+            const lines =
+                buffer.split(
+                    /\r?\n/
+                );
+
+
+            buffer =
+                lines.pop() ||
+                "";
+
+
+            for (
+                let line
+                of lines
+            ) {
+
+                line =
+                    line.trim();
+
+
+                if (!line) {
+                    continue;
+                }
+
+
+                if (
+                    line.startsWith(
+                        "data:"
+                    )
+                ) {
+
+                    line =
+                        line
+                            .slice(5)
+                            .trim();
+                }
+
+
+                if (
+                    line ===
+                    "[DONE]"
+                ) {
+
+                    continue;
+                }
+
+
+                try {
+
+                    const data =
+                        JSON.parse(
+                            line
+                        );
+
+
+                    const delta =
+                        extractDelta(
+                            data
+                        );
+
+
+                    if (
+                        delta
+                    ) {
+
+                        rawResult +=
+                            delta;
+
+
+                        /*
+                         * 没有注音时，
+                         * 可以真正流式显示。
+                         */
+
+                        if (
+                            !usePronunciation
+                        ) {
+
+                            setOutputText(
+                                rawResult
+                            );
+                        }
+                    }
+
+                } catch {
+
+                    /*
+                     * 忽略非 JSON SSE 行。
+                     */
+                }
+            }
+        }
+
+
+        /*
+         * 处理最后残留数据
+         */
+
+        if (
+            buffer.trim()
+        ) {
+
+            let line =
+                buffer.trim();
+
+
+            if (
+                line.startsWith(
+                    "data:"
+                )
+            ) {
+
+                line =
+                    line
+                        .slice(5)
+                        .trim();
+            }
+
+
+            if (
+                line !==
+                "[DONE]"
+            ) {
+
+                try {
+
+                    const data =
+                        JSON.parse(
+                            line
+                        );
+
+
+                    const delta =
+                        extractDelta(
+                            data
+                        );
+
+
+                    if (
+                        delta
+                    ) {
+
+                        rawResult +=
+                            delta;
+
+
+                        if (
+                            !usePronunciation
+                        ) {
+
+                            setOutputText(
+                                rawResult
+                            );
+                        }
+                    }
+
+                } catch {}
+            }
+        }
+
+
+        /*
+         * 没有获得结果
+         */
+
+        if (
+            !rawResult.trim()
+        ) {
+
+            throw new Error(
+                "API 返回成功，但没有获得译文。"
+            );
+        }
+
+
+        /* =================================================
+           Pronunciation result
+        ================================================= */
+
+        if (
+            usePronunciation
+        ) {
+
+            const parsed =
+                extractJSON(
+                    rawResult
+                );
+
+
+            if (
+                parsed &&
+                typeof parsed.translation ===
+                "string"
+            ) {
+
+                const translation =
+                    parsed.translation;
+
+
+                const pronunciation =
+                    typeof parsed.pronunciation ===
+                    "string"
+
+                        ? parsed.pronunciation
+
+                        : "";
+
+
+                lastTranslationData = {
+
+                    translation,
+
+                    pronunciation
+                };
+
+
+                renderTranslation(
+                    translation,
+                    pronunciation
+                );
+
+
+            } else {
+
+                /*
+                 * 如果模型没有严格返回 JSON，
+                 * 不让结果直接丢失。
+                 */
+
+                lastTranslationData = {
+
+                    translation:
+                        rawResult,
+
+                    pronunciation:
+                        ""
+                };
+
+
+                renderTranslation(
+                    rawResult,
+                    ""
+                );
+            }
+
+
+        } else {
+
+            lastTranslationData = {
+
+                translation:
+                    rawResult,
+
+                pronunciation:
+                    ""
+            };
+
+
+            setOutputText(
+                rawResult
+            );
+        }
+
+
+        setStatus(
+            "success",
+
+            translationMode.value ===
+            "machine"
+
+                ? "机翻完成"
+
+                : "翻译完成"
+        );
+
+
+    } catch (error) {
+
+        if (
+            error.name ===
+            "AbortError"
+        ) {
+
+            setStatus(
+                "",
+                "已停止"
+            );
+
+
+            if (
+                !output.textContent.trim()
+            ) {
+
+                setOutputEmpty(
+                    "已停止翻译。"
+                );
+            }
+
+
+        } else {
+
+            console.error(
+                error
+            );
+
+
+            setStatus(
+                "error",
+                "翻译失败"
+            );
+
+
+            setOutputError(
+                `翻译失败：\n${error.message}`
+            );
+        }
+
+    } finally {
+
+        isTranslating =
+            false;
+
+        controller =
+            null;
+
+        translateBtn.disabled =
+            false;
+
+        retryBtn.disabled =
+            false;
+
+        stopBtn.disabled =
+            true;
+    }
+}
+
+
+/* =========================================================
+   Stop
+========================================================= */
+
+stopBtn.addEventListener(
+    "click",
+    () => {
+
+        if (controller) {
+
+            controller.abort();
+        }
+    }
+);
+
+
+/* =========================================================
+   Translate
+========================================================= */
+
+translateBtn.addEventListener(
+    "click",
+    translate
+);
+
+
+retryBtn.addEventListener(
+    "click",
+    translate
+);
+
+
+/* =========================================================
+   Clear
+========================================================= */
+
+clearBtn.addEventListener(
+    "click",
+    () => {
+
+        sourceText.value =
+            "";
+
+
+        setOutputEmpty(
+            "翻译结果将在这里显示……"
+        );
+
+
+        sourceStatus.textContent =
+            "等待输入";
+
+
+        targetStatus.textContent =
+            "等待翻译";
+
+
+        lastTranslationData =
+            null;
+
+
+        updateCount();
+
+
+        sourceText.focus();
+    }
+);
+
+
+/* =========================================================
+   Copy
+========================================================= */
+
+copyBtn.addEventListener(
+    "click",
+    async () => {
+
+        let text =
+            "";
+
+
+        /*
+         * 复制时只复制翻译，
+         * 不复制注音。
+         */
+
+        if (
+            lastTranslationData &&
+            typeof lastTranslationData.translation ===
+            "string"
+        ) {
+
+            text =
+                lastTranslationData.translation;
+
+        } else {
+
+            text =
+                output.textContent;
+        }
+
+
+        if (
+            !text.trim()
+        ) {
+
+            return;
+        }
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                text
+            );
+
+
+            copyBtn.textContent =
+                "✓";
+
+
+            setTimeout(
+                () => {
+
+                    copyBtn.textContent =
+                        "⧉";
+
+                },
+                1200
+            );
+
+
+        } catch {
+
+            const textarea =
+                document.createElement(
+                    "textarea"
+                );
+
+
+            textarea.value =
+                text;
+
+
+            textarea.style.position =
+                "fixed";
+
+            textarea.style.opacity =
+                "0";
+
+
+            document.body.appendChild(
+                textarea
+            );
+
+
+            textarea.select();
+
+
+            try {
+
+                document.execCommand(
+                    "copy"
+                );
+
+
+                copyBtn.textContent =
+                    "✓";
+
+            } catch {
+
+                alert(
+                    "复制失败，请手动复制。"
+                );
+            }
+
+
+            textarea.remove();
+
+
+            setTimeout(
+                () => {
+
+                    copyBtn.textContent =
+                        "⧉";
+
+                },
+                1200
+            );
+        }
+    }
+);
+
+
+/* =========================================================
+   Target synchronization
+========================================================= */
+
+quickTarget.addEventListener(
+    "change",
+    () => {
+
+        targetLanguage.value =
+            quickTarget.value;
+    }
+);
+
+
+targetLanguage.addEventListener(
+    "change",
+    () => {
+
+        quickTarget.value =
+            targetLanguage.value;
+    }
+);
+
+
+/* =========================================================
+   Pronunciation preference
+========================================================= */
+
+pronunciationToggle.checked =
+    localStorage.getItem(
+        "aiTranslatorPronunciation"
+    ) === "true";
+
+
+pronunciationToggle.addEventListener(
+    "change",
+    () => {
+
+        localStorage.setItem(
+            "aiTranslatorPronunciation",
+            pronunciationToggle.checked
+                ? "true"
+                : "false"
+        );
+    }
+);
+
+
+/* =========================================================
+   Keyboard shortcuts
+========================================================= */
+
+sourceText.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.ctrlKey &&
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            translate();
+        }
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape" &&
+            settingsOverlay.classList.contains(
+                "show"
+            )
+        ) {
+
+            closeSettingsPanel();
+        }
+    }
+);
+
+
+/* =========================================================
+   Initial state
+========================================================= */
+
+updateCount();
+
+updateModeUI();
+
+sourceText.focus();
+
+</script>
+
+</body>
+</html>
