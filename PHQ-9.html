@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="PHQ-9 抑郁症状筛查工具，仅供心理健康筛查参考。" />
+    <meta name="theme-color" content="#f1efe9" />
+    <script src="theme.js"></script>
+    <title>PHQ-9 抑郁筛查</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="gender-check.css" />
+    <link rel="stylesheet" href="phq9.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="app">
+        <header class="site-header">
+        <a class="brand" href="index.html" aria-label="返回首页"><span class="brand-symbol">✳</span><span id="siteTitle">PHQ<span class="brand-accent">/</span>9</span></a>
+        <div class="header-meta"><span class="status"><i></i> <span id="statusText">SCREENING TOOL</span></span><div class="language-switcher" role="group" aria-label="Language Switcher">
+          <button class="lang-btn" data-lang="zh-CN">简体中文</button><button class="lang-btn active" data-lang="zh-TW">繁體中文</button><button class="lang-btn" data-lang="ja">日本語</button><button class="lang-btn" data-lang="en">English</button>
+        </div><button class="theme-toggle" type="button" data-theme-toggle></button></div>
+      </header>
+
+      <main>
+        <div class="page-intro"><p class="kicker" id="introKicker">01 / MENTAL HEALTH CHECK-IN</p><h1 id="introTitle" class="typing-title" aria-label="给情绪一个被看见的机会。"><span class="typing-line" data-text="给情绪一个"></span><br /><em class="typing-line" data-text="被看见的机会。"></em></h1><p class="intro-copy" id="introCopy">用九个问题，温和地了解过去两周的状态。答案只用于本次测评，不会被记录或保存。</p><div class="decor-line"><span></span><span></span><span></span></div></div>
+        <div class="container">
+          <section id="homePage" class="card fade-in">
+            <p class="mini-label">START HERE</p><h2 class="home-title" id="homeTitle">PHQ-9 憂鬱篩查</h2><p class="home-description" id="homeDescription">PHQ-9 是常用的憂鬱症狀篩查量表，可用於初步了解近期心理狀態。</p>
+            <div class="notice-box"><h3 id="noticeTitle">注意事項</h3><ul id="noticeList"><li>本測評僅供心理健康篩查參考。</li><li>結果不能取代醫師診斷。</li><li>請依最近兩週狀況作答。</li><li>請獨立完成測評。</li></ul></div>
+            <div class="checkbox-area"><input type="checkbox" id="agreementCheckbox" aria-required="true" /><label for="agreementCheckbox" id="agreementText">我已閱讀並理解本測評僅供篩查參考，不能取代專業診斷。</label></div>
+            <div class="center"><button id="startButton" class="btn btn-primary" disabled aria-label="Start Assessment">開始測評 <span>↗</span></button></div>
+          </section>
+
+          <section id="questionPage" class="card hidden" aria-live="polite"><div class="section-tag"><span>02 / QUESTIONS</span><span>ONE STEP AT A TIME</span></div><div class="progress-wrapper"><div class="progress-info"><span id="questionCounter">1 / 9</span><span id="progressPercent">11%</span></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div><h2 id="questionText" class="question-title">Question</h2><div id="answerList" class="answer-list"></div><div class="question-actions"><button id="previousButton" class="btn btn-secondary" type="button">上一题</button></div></section>
+
+          <section id="resultPage" class="card hidden"><div class="section-tag"><span>03 / YOUR REFLECTION</span><span>KEEP THIS FOR YOURSELF</span></div><div class="result-header"><p class="mini-label">THE RESULT IS IN</p><h2 id="resultTitle">測評結果</h2><div id="scoreNumber" class="score-number">0</div><div id="scoreLevel" class="score-level">-</div><div id="testTime" class="mt-20"></div></div><div class="chart-wrapper"><div class="chart-card"><canvas id="scoreChart" width="300" height="300" aria-label="PHQ-9 Score Chart" role="img"></canvas></div></div><div class="result-grid"><div class="info-box"><h3 id="summaryTitle">總結</h3><p id="summaryContent"></p></div><div class="info-box"><h3 id="adviceTitle">建議</h3><p id="adviceContent"></p></div></div><div id="riskWarning" class="warning-box hidden"><h3 id="riskWarningTitle">風險提示</h3><p id="riskWarningContent"></p></div><div class="result-actions"><button id="exportButton" class="btn btn-primary" aria-label="Export PDF">導出 PDF <span>↗</span></button><button id="restartButton" class="btn btn-secondary" aria-label="Restart">重新作答 <span>↻</span></button></div></section>
+
+          <section id="loadingPage" class="card hidden"><div class="loading"><div class="spinner"></div><div id="loadingText">正在計算結果...</div></div></section>
+        </div>
+      </main>
+
+      <div id="exportModal" class="modal-overlay" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="exportTitle"><h2 id="exportTitle" class="modal-title">导出选项</h2><div class="export-options"><label class="export-option"><input type="checkbox" id="pdfScore" checked /><span id="pdfScoreText">总分</span></label><label class="export-option"><input type="checkbox" id="pdfLevel" checked /><span id="pdfLevelText">风险等级</span></label><label class="export-option"><input type="checkbox" id="pdfChart" checked /><span id="pdfChartText">环形图</span></label><label class="export-option"><input type="checkbox" id="pdfAdvice" checked /><span id="pdfAdviceText">建议</span></label><label class="export-option"><input type="checkbox" id="pdfTime" checked /><span id="pdfTimeText">测评时间</span></label></div><div class="modal-actions"><button id="cancelExport" class="btn btn-secondary">取消</button><button id="confirmExport" class="btn btn-primary">打印</button></div></div></div>
+      <div id="printContainer" class="print-only"></div>
+      <footer><span>© 2024 PHQ/9</span><span id="footerNote">Take care of your mind.</span></footer>
+    </div>
+    <script src="typing.js"></script>
+    <script src="phq9.js" defer></script>
+  </body>
+</html>

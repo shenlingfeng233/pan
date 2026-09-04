@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="输入性别，看看性别检测器会告诉你什么。" />
+    <meta name="theme-color" content="#f1efe9" />
+    <title id="page-title">性别检测器 | 你的答案，即将揭晓</title>
+    <script src="theme.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="gender-check.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="返回项目主页"><span class="brand-symbol">✳</span><span>GENDER<span class="brand-accent">/</span>CHECK</span></a>
+      <div class="header-tools"><span class="status"><i></i> <span id="status-text">在线检测中</span></span><div class="language-switcher" role="group" aria-label="语言切换"><button class="lang-btn active" type="button" data-lang="zh-CN">简体中文</button><button class="lang-btn" type="button" data-lang="zh-TW">繁體中文</button><button class="lang-btn" type="button" data-lang="ja">日本語</button><button class="lang-btn" type="button" data-lang="en">English</button></div><button class="theme-toggle" type="button" data-theme-toggle></button></div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker" id="hero-kicker">01 / QUICK IDENTITY SCAN</p>
+          <h1 id="gender-hero-title" aria-label="先别急着下定义。"><span class="typing-line" data-text="先别急着"></span><br /><em class="typing-line" data-text="下定义。"></em></h1>
+          <p class="intro" id="hero-intro">输入你认同的性别，让我们的神秘算法为你揭晓一个答案。简单、快速，还有一点点仪式感。</p>
+          <div class="decor-line"><span></span><span></span><span></span></div>
+        </div>
+        <div class="orbital-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="orb"><span>?</span></div>
+          <div class="art-label label-top" id="art-top">IDENTITY<br /><b>IS FLUID</b></div>
+          <div class="art-label label-bottom" id="art-bottom">SCAN<br /><b>READY</b></div>
+        </div>
+      </section>
+
+      <section class="checker" aria-labelledby="checker-title">
+        <div class="panel-top"><span id="panel-input">02 / YOUR INPUT</span><span id="panel-private">SECURE &amp; PRIVATE</span></div>
+        <div class="checker-content">
+          <div>
+            <p class="mini-label" id="form-kicker">Tell us who you are</p>
+            <h2 id="checker-title"><span id="question-text">你觉得自己的</span><br /><em id="question-em">性别是？</em></h2>
+          </div>
+          <form id="gender-form" class="form-area">
+            <label id="input-label" for="gender-input">我的性别</label>
+            <div class="input-row">
+              <input id="gender-input" name="gender" type="text" placeholder="例如：女生、男生、非二元……" autocomplete="off" maxlength="40" />
+              <button id="submit-button" type="submit">确认 <span>↗</span></button>
+            </div>
+            <p class="privacy-note" id="privacy-note">你的答案只会用于本次展示，不会被记录或保存。</p>
+          </form>
+        </div>
+        <div class="result" id="result" aria-live="polite" hidden>
+          <div class="result-mark">✦</div>
+          <p class="mini-label" id="result-kicker">THE RESULT IS IN</p>
+          <p class="result-text" id="result-text">你的性别为：</p>
+          <h2 id="result-value"></h2>
+          <button class="reset-button" id="reset-button" type="button"><span id="reset-text">再检测一次</span> <span>↻</span></button>
+        </div>
+      </section>
+    </main>
+    <footer><span>© 2024 GENDER/CHECK</span><span id="footer-text">Be exactly who you are.</span></footer>
+    <script src="typing.js"></script>
+    <script>
+      const form = document.querySelector('#gender-form');
+      const input = document.querySelector('#gender-input');
+      const checker = document.querySelector('.checker');
+      const result = document.querySelector('#result');
+      const resultValue = document.querySelector('#result-value');
+      const resetButton = document.querySelector('#reset-button');
+      const submitButton = document.querySelector('#submit-button');
+      const languages = {
+        'zh-CN': { html: 'zh-CN', title: '性别检测器 | 你的答案，即将揭晓', status: '在线检测中', heroKicker: '01 / QUICK IDENTITY SCAN', heroTitle: '先别急着<br /><em>下定义。</em>', heroIntro: '输入你认同的性别，让我们的神秘算法为你揭晓一个答案。简单、快速，还有一点点仪式感。', artTop: 'IDENTITY<br /><b>IS FLUID</b>', artBottom: 'SCAN<br /><b>READY</b>', panelInput: '02 / YOUR INPUT', panelPrivate: 'SECURE &amp; PRIVATE', formKicker: 'Tell us who you are', question: '你觉得自己的', questionEm: '性别是？', inputLabel: '我的性别', placeholder: '例如：女生、男生、非二元……', submit: '确认', privacy: '你的答案只会用于本次展示，不会被记录或保存。', resultKicker: 'THE RESULT IS IN', resultText: '你的性别为：', reset: '再检测一次', footer: 'Be exactly who you are.', loading: '分析中' },
+        'zh-TW': { html: 'zh-TW', title: '性別檢測器 | 你的答案，即將揭曉', status: '線上檢測中', heroKicker: '01 / QUICK IDENTITY SCAN', heroTitle: '先別急著<br /><em>下定義。</em>', heroIntro: '輸入你認同的性別，讓我們的神秘算法為你揭曉一個答案。簡單、快速，還有一點點儀式感。', artTop: 'IDENTITY<br /><b>IS FLUID</b>', artBottom: 'SCAN<br /><b>READY</b>', panelInput: '02 / YOUR INPUT', panelPrivate: 'SECURE &amp; PRIVATE', formKicker: 'Tell us who you are', question: '你覺得自己的', questionEm: '性別是？', inputLabel: '我的性別', placeholder: '例如：女生、男生、非二元……', submit: '確認', privacy: '你的答案只會用於本次展示，不會被記錄或保存。', resultKicker: 'THE RESULT IS IN', resultText: '你的性別為：', reset: '再檢測一次', footer: 'Be exactly who you are.', loading: '分析中' },
+        ja: { html: 'ja', title: '性別チェッカー | あなたの答えを発表', status: 'オンライン検出中', heroKicker: '01 / QUICK IDENTITY SCAN', heroTitle: 'まだ急いで<br /><em>決めないで。</em>', heroIntro: 'あなたが認識している性別を入力してください。神秘的なアルゴリズムが答えを導きます。', artTop: 'IDENTITY<br /><b>IS FLUID</b>', artBottom: 'SCAN<br /><b>READY</b>', panelInput: '02 / YOUR INPUT', panelPrivate: 'SECURE &amp; PRIVATE', formKicker: 'あなたについて教えてください', question: 'あなたが思う', questionEm: '性別は？', inputLabel: '私の性別', placeholder: '例：女性、男性、ノンバイナリー……', submit: '確認', privacy: 'あなたの答えは今回の表示にのみ使用され、保存されません。', resultKicker: 'THE RESULT IS IN', resultText: 'あなたの性別は：', reset: 'もう一度診断', footer: 'Be exactly who you are.', loading: '分析中' },
+        en: { html: 'en', title: 'Gender Check | Your answer is about to be revealed', status: 'CHECKING ONLINE', heroKicker: '01 / QUICK IDENTITY SCAN', heroTitle: 'Don’t rush<br /><em>to define.</em>', heroIntro: 'Enter the gender you identify with and let our mysterious algorithm reveal an answer. Simple, quick, with a little ceremony.', artTop: 'IDENTITY<br /><b>IS FLUID</b>', artBottom: 'SCAN<br /><b>READY</b>', panelInput: '02 / YOUR INPUT', panelPrivate: 'SECURE &amp; PRIVATE', formKicker: 'Tell us who you are', question: 'What do you feel your', questionEm: 'gender is?', inputLabel: 'My gender', placeholder: 'e.g. woman, man, non-binary…', submit: 'Confirm', privacy: 'Your answer is only used for this display and is never saved.', resultKicker: 'THE RESULT IS IN', resultText: 'Your gender is:', reset: 'Check again', footer: 'Be exactly who you are.', loading: 'ANALYZING' }
+      };
+      const textIds = { 'page-title': 'title', 'status-text': 'status', 'hero-kicker': 'heroKicker', 'hero-intro': 'heroIntro', 'art-top': 'artTop', 'art-bottom': 'artBottom', 'panel-input': 'panelInput', 'panel-private': 'panelPrivate', 'form-kicker': 'formKicker', 'question-text': 'question', 'question-em': 'questionEm', 'input-label': 'inputLabel', 'privacy-note': 'privacy', 'result-kicker': 'resultKicker', 'result-text': 'resultText', 'reset-text': 'reset', 'footer-text': 'footer' };
+      let currentLanguage = localStorage.getItem('gender-check-language') || 'zh-CN';
+      const setLanguage = (language) => { const copy = languages[language]; currentLanguage = language; document.documentElement.lang = copy.html; Object.entries(textIds).forEach(([id, key]) => { document.querySelector(`#${id}`).innerHTML = copy[key]; }); const titleLines = document.querySelectorAll('#gender-hero-title .typing-line'); const titleParts = copy.heroTitle.replace(/<br\s*\/?>/i, '|').replace(/<[^>]+>/g, '').split('|'); titleLines.forEach((line, index) => { line.dataset.text = titleParts[index] || ''; }); document.querySelector('#gender-hero-title').setAttribute('aria-label', titleParts.join('')); if (window.resetTypingTitles) window.resetTypingTitles(); input.placeholder = copy.placeholder; submitButton.innerHTML = `${copy.submit} <span>↗</span>`; document.title = copy.title; document.querySelectorAll('.lang-btn').forEach((button) => button.classList.toggle('active', button.dataset.lang === language)); localStorage.setItem('gender-check-language', language); };
+      document.querySelectorAll('.lang-btn').forEach((button) => button.addEventListener('click', () => setLanguage(button.dataset.lang)));
+      setLanguage(currentLanguage);
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const value = input.value.trim();
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const randomGender = Array.from({ length: 21 }, () => characters[Math.floor(Math.random() * characters.length)]).join('');
+        const gender = value || randomGender;
+        checker.classList.add('is-loading');
+        input.disabled = true;
+        form.querySelector('button').disabled = true;
+        form.querySelector('button').innerHTML = `${languages[currentLanguage].loading} <span class="spinner">◌</span>`;
+        const delay = 2000 + Math.floor(Math.random() * 3001);
+        window.setTimeout(() => {
+          resultValue.textContent = gender;
+          form.hidden = true;
+          result.hidden = false;
+          checker.classList.remove('is-loading');
+          result.classList.add('show');
+        }, delay);
+      });
+
+      resetButton.addEventListener('click', () => {
+        result.hidden = true;
+        result.classList.remove('show');
+        form.hidden = false;
+        input.disabled = false;
+        input.value = '';
+        const button = form.querySelector('button');
+        button.disabled = false;
+        button.innerHTML = `${languages[currentLanguage].submit} <span>↗</span>`;
+        input.focus();
+      });
+    </script>
+  </body>
+</html>
