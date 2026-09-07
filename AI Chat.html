@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -320,6 +321,52 @@
 
         .message-content a {
             color: inherit;
+        }
+
+        .thinking-block {
+            margin: 0 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--input);
+            overflow: hidden;
+        }
+
+        .thinking-summary {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            width: 100%;
+            padding: 9px 12px;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            text-align: left;
+            font-size: 13px;
+            list-style: none;
+        }
+
+        .thinking-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .thinking-summary::before {
+            content: "▸";
+            transition: transform .15s ease;
+        }
+
+        .thinking-block[open] .thinking-summary::before {
+            transform: rotate(90deg);
+        }
+
+        .thinking-summary:hover {
+            background: var(--hover);
+            color: var(--text);
+        }
+
+        .thinking-body {
+            padding: 0 12px 11px;
+            color: var(--muted);
+            font-size: 13px;
         }
 
         /* Markdown */
@@ -787,6 +834,9 @@
             --surface-container: #f3edf7;
             --surface-container-high: #ece6f0;
             --outline: #79747e;
+            --focus-ring: rgba(103, 80, 164, .2);
+            --chat-bg-image: none;
+            --chat-bg-opacity: .38;
         }
 
         body {
@@ -794,18 +844,33 @@
             letter-spacing: .01em;
         }
 
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: var(--chat-bg-image);
+            background-position: center;
+            background-repeat: repeat;
+            opacity: var(--chat-bg-opacity);
+        }
+
         button, input, textarea {
             font-family: Roboto, "Segoe UI", sans-serif;
         }
 
         .app {
-            background: var(--bg);
+            position: relative;
+            z-index: 1;
+            background: transparent;
         }
 
         .sidebar {
             width: 288px;
             min-width: 288px;
             background: var(--sidebar);
+            background: color-mix(in srgb, var(--sidebar) 88%, transparent);
             border-right: 0;
             padding: 20px 16px 16px;
         }
@@ -886,7 +951,8 @@
             border-bottom: 1px solid var(--border);
             justify-content: space-between;
             padding: 0 28px;
-            background: rgba(255, 251, 254, .92);
+            background: var(--bg);
+            background: color-mix(in srgb, var(--bg) 88%, transparent);
         }
 
         .topbar::before {
@@ -1005,7 +1071,7 @@
         .setting textarea:focus,
         .edit-area:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(103, 80, 164, .18);
+            box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
         .refresh-models {
@@ -1023,7 +1089,7 @@
         }
 
         .messages {
-            background: var(--bg);
+            background: transparent;
         }
 
         .message-wrap {
@@ -1074,6 +1140,7 @@
         .composer-area {
             padding: 16px 28px 24px;
             background: var(--bg);
+            background: color-mix(in srgb, var(--bg) 72%, transparent);
         }
 
         .composer {
@@ -1087,7 +1154,7 @@
 
         .composer:focus-within {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(103, 80, 164, .16), 0 3px 10px var(--shadow);
+            box-shadow: 0 0 0 3px var(--focus-ring), 0 3px 10px var(--shadow);
         }
 
         .composer textarea {
@@ -1262,7 +1329,7 @@
         }
 
         .switch-control input:focus-visible + .switch-track {
-            box-shadow: 0 0 0 3px rgba(103, 80, 164, .2);
+            box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
         .modal-footer {
@@ -1286,6 +1353,117 @@
             border-color: var(--accent) !important;
             background: var(--accent);
             color: #fff;
+        }
+
+        .background-preview {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 92px;
+            padding: 10px;
+            border: 1px solid var(--outline);
+            border-radius: 14px;
+            background: var(--surface-container);
+            background: color-mix(in srgb, var(--surface-container) 78%, transparent);
+        }
+
+        .background-preview-image {
+            width: 112px;
+            height: 70px;
+            flex: 0 0 auto;
+            object-fit: cover;
+            border-radius: 9px;
+            background: var(--surface-container-high);
+        }
+
+        .background-preview-image:not([src]) {
+            display: none;
+        }
+
+        .background-preview-copy {
+            min-width: 0;
+        }
+
+        .background-preview-name,
+        .background-preview-hint {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .background-preview-name {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .background-preview-hint {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .background-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .background-actions button {
+            padding: 9px 13px;
+            border: 1px solid var(--outline);
+            border-radius: 18px;
+            background: transparent;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .background-actions button:hover {
+            background: var(--hover);
+        }
+
+        .background-actions button:disabled {
+            cursor: not-allowed;
+            opacity: .45;
+        }
+
+        .opacity-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .opacity-row input[type="range"] {
+            min-width: 0;
+            flex: 1;
+            height: 6px;
+            padding: 0;
+            border: 0;
+            accent-color: var(--accent);
+            background: var(--surface-container-high);
+        }
+
+        .opacity-value {
+            width: 42px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .new-chat:hover,
+        .send-btn:hover {
+            background: var(--accent);
+            background: color-mix(in srgb, var(--accent) 88%, black);
+        }
+
+        @media (max-width: 700px) {
+            .background-preview-image {
+                width: 96px;
+            }
         }
 
         @media (max-width: 700px) {
@@ -1667,6 +1845,53 @@
             </div>
 
             <div class="setting">
+                <div class="setting-switch">
+                    <div>
+                        <label for="deepThinkingInput">深度思考</label>
+                        <div class="setting-supporting-text">
+                            开启后请求会要求模型返回思考过程，并在消息中折叠显示。
+                        </div>
+                    </div>
+
+                    <label class="switch-control" aria-label="深度思考">
+                        <input id="deepThinkingInput" type="checkbox">
+                        <span class="switch-track"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting">
+                <label>聊天背景</label>
+
+                <div class="background-preview" id="backgroundPreview">
+                    <img class="background-preview-image" id="backgroundPreviewImage" alt="聊天背景预览">
+                    <div class="background-preview-copy">
+                        <span class="background-preview-name" id="backgroundName">未设置背景图片</span>
+                        <span class="background-preview-hint" id="backgroundHint">图片会平铺在整个页面，并用于生成 Material You 配色。</span>
+                    </div>
+                </div>
+
+                <div class="background-actions">
+                    <input id="backgroundImageInput" type="file" accept="image/*" hidden>
+                    <button id="chooseBackgroundBtn" type="button">上传图片</button>
+                    <button id="removeBackgroundBtn" type="button">移除背景</button>
+                </div>
+            </div>
+
+            <div class="setting">
+                <label for="backgroundOpacityInput">背景图片透明度</label>
+
+                <div class="opacity-row">
+                    <input id="backgroundOpacityInput" type="range" min="0" max="100" step="1" value="38">
+                    <output class="opacity-value" id="backgroundOpacityValue" for="backgroundOpacityInput">38%</output>
+                </div>
+
+                <div class="setting-supporting-text">
+                    透明度越低，聊天内容越清晰。配色会随背景图片自动更新。
+                </div>
+            </div>
+
+            <div class="setting">
                 <label for="systemPromptInput">
                     System Prompt
                 </label>
@@ -1724,6 +1949,10 @@ let state = {
     apiKey: "",
     apiBaseUrl: DEFAULT_API_BASE_URL,
     directApi: false,
+    deepThinking: false,
+    backgroundImage: "",
+    backgroundImageName: "",
+    backgroundOpacity: 0.38,
     model: DEFAULT_MODEL,
     systemPrompt: "",
     models: [],
@@ -1761,6 +1990,16 @@ function loadState() {
     }
 
     state.directApi = Boolean(state.directApi);
+    state.deepThinking = Boolean(state.deepThinking);
+    state.backgroundImage = typeof state.backgroundImage === "string"
+        ? state.backgroundImage
+        : "";
+    state.backgroundImageName = typeof state.backgroundImageName === "string"
+        ? state.backgroundImageName
+        : "";
+    state.backgroundOpacity = Number.isFinite(Number(state.backgroundOpacity))
+        ? Math.min(Math.max(Number(state.backgroundOpacity), 0), 1)
+        : 0.38;
 
     try {
         state.apiBaseUrl = normalizeApiBaseUrl(state.apiBaseUrl);
@@ -1787,6 +2026,215 @@ function saveState() {
         );
     } catch (error) {
         console.error("无法保存本地数据:", error);
+    }
+}
+
+
+const defaultAppearance = {
+    "--bg": "#fffbfe",
+    "--sidebar": "#f7f2fa",
+    "--border": "#e7e0ec",
+    "--text": "#1d1b20",
+    "--muted": "#79747e",
+    "--hover": "#eee7f0",
+    "--input": "#f3edf7",
+    "--accent": "#6750a4",
+    "--user-bg": "#eaddff",
+    "--danger": "#ba1a1a",
+    "--primary-container": "#eaddff",
+    "--on-primary-container": "#21005d",
+            "--surface-container": "#f3edf7",
+            "--surface-container-high": "#ece6f0",
+            "--outline": "#79747e",
+            "--focus-ring": "rgba(103, 80, 164, .2)",
+            "--shadow": "rgba(70, 50, 90, 0.12)"
+};
+
+
+function setAppearanceVariables(variables) {
+    for (const [name, value] of Object.entries(variables)) {
+        document.documentElement.style.setProperty(name, value);
+    }
+}
+
+
+function hslToHex(hue, saturation, lightness) {
+    const h = ((hue % 360) + 360) % 360 / 360;
+    const s = Math.max(0, Math.min(100, saturation)) / 100;
+    const l = Math.max(0, Math.min(100, lightness)) / 100;
+    const channel = (n) => {
+        const k = (n + h * 12) % 12;
+        const a = s * Math.min(l, 1 - l);
+        return l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
+    };
+    return `#${[channel(0), channel(8), channel(4)]
+        .map(value => Math.round(value * 255).toString(16).padStart(2, "0"))
+        .join("")}`;
+}
+
+
+function applyDynamicColors(seed) {
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const hue = seed.hue;
+    const chroma = Math.max(16, Math.min(76, seed.saturation));
+    const neutralHue = hue;
+    const neutralSaturation = Math.min(20, Math.max(7, seed.saturation * .18));
+
+    if (dark) {
+        setAppearanceVariables({
+            "--bg": hslToHex(neutralHue, neutralSaturation, 12),
+            "--sidebar": hslToHex(neutralHue, neutralSaturation + 2, 9),
+            "--border": hslToHex(neutralHue, neutralSaturation, 24),
+            "--text": hslToHex(neutralHue, 9, 92),
+            "--muted": hslToHex(neutralHue, 8, 72),
+            "--hover": hslToHex(neutralHue, neutralSaturation + 4, 22),
+            "--input": hslToHex(neutralHue, neutralSaturation + 4, 21),
+            "--accent": hslToHex(hue, chroma, 78),
+            "--user-bg": hslToHex(hue, Math.min(chroma, 48), 28),
+            "--primary-container": hslToHex(hue, Math.min(chroma, 52), 30),
+            "--on-primary-container": hslToHex(hue, 80, 92),
+            "--surface-container": hslToHex(neutralHue, neutralSaturation + 4, 20),
+            "--surface-container-high": hslToHex(neutralHue, neutralSaturation + 4, 24),
+            "--outline": hslToHex(neutralHue, 10, 73),
+            "--focus-ring": `hsla(${hue}, 60%, 70%, .28)`,
+            "--shadow": `hsla(${hue}, 30%, 2%, .35)`
+        });
+        return;
+    }
+
+    setAppearanceVariables({
+        "--bg": hslToHex(neutralHue, neutralSaturation, 98),
+        "--sidebar": hslToHex(neutralHue, neutralSaturation + 2, 96),
+        "--border": hslToHex(neutralHue, neutralSaturation, 88),
+        "--text": hslToHex(neutralHue, 10, 12),
+        "--muted": hslToHex(neutralHue, 8, 43),
+        "--hover": hslToHex(neutralHue, neutralSaturation + 4, 92),
+        "--input": hslToHex(neutralHue, neutralSaturation + 4, 95),
+        "--accent": hslToHex(hue, chroma, 40),
+        "--user-bg": hslToHex(hue, Math.min(chroma, 48), 91),
+        "--primary-container": hslToHex(hue, Math.min(chroma, 52), 91),
+        "--on-primary-container": hslToHex(hue, 58, 20),
+            "--surface-container": hslToHex(neutralHue, neutralSaturation + 4, 95),
+            "--surface-container-high": hslToHex(neutralHue, neutralSaturation + 4, 92),
+            "--outline": hslToHex(neutralHue, 10, 48),
+            "--focus-ring": `hsla(${hue}, 60%, 45%, .2)`,
+            "--shadow": `hsla(${hue}, 30%, 20%, .14)`
+    });
+}
+
+
+function resetAppearance() {
+    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    if (dark) {
+        setAppearanceVariables({
+            ...defaultAppearance,
+            "--bg": "#212121",
+            "--sidebar": "#171717",
+            "--border": "#3a3a3a",
+            "--text": "#eeeeee",
+            "--muted": "#a0a0a0",
+            "--hover": "#2d2d2d",
+            "--input": "#2f2f2f",
+            "--accent": "#ffffff",
+            "--user-bg": "#303030",
+            "--danger": "#ff6b61",
+            "--primary-container": "#303030",
+            "--on-primary-container": "#eaddff",
+            "--surface-container": "#2f2f2f",
+            "--surface-container-high": "#3a3a3a",
+            "--outline": "#a0a0a0",
+            "--focus-ring": "rgba(255, 255, 255, .2)",
+            "--shadow": "rgba(0, 0, 0, 0.3)"
+        });
+        return;
+    }
+
+    setAppearanceVariables(defaultAppearance);
+}
+
+
+function extractSeedColor(dataUrl) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+            const size = 64;
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size;
+            const context = canvas.getContext("2d", { willReadFrequently: true });
+
+            if (!context) {
+                reject(new Error("当前浏览器不支持图片取色。"));
+                return;
+            }
+
+            context.drawImage(image, 0, 0, size, size);
+            const pixels = context.getImageData(0, 0, size, size).data;
+            const buckets = new Map();
+
+            for (let index = 0; index < pixels.length; index += 16) {
+                const alpha = pixels[index + 3] / 255;
+                if (alpha < .35) continue;
+
+                const red = Math.min(224, Math.round(pixels[index] / 32) * 32);
+                const green = Math.min(224, Math.round(pixels[index + 1] / 32) * 32);
+                const blue = Math.min(224, Math.round(pixels[index + 2] / 32) * 32);
+                const key = `${red},${green},${blue}`;
+                buckets.set(key, (buckets.get(key) || 0) + alpha);
+            }
+
+            const seed = [...buckets.entries()]
+                .sort((a, b) => b[1] - a[1])[0];
+
+            if (!seed) {
+                resolve({ hue: 270, saturation: 36, lightness: 72 });
+                return;
+            }
+
+            const [red, green, blue] = seed[0].split(",").map(Number);
+            const max = Math.max(red, green, blue) / 255;
+            const min = Math.min(red, green, blue) / 255;
+            const lightness = (max + min) / 2;
+            const difference = max - min;
+            let hue = 0;
+
+            if (difference) {
+                if (max === red / 255) hue = 60 * (((green - blue) / 255) / difference % 6);
+                else if (max === green / 255) hue = 60 * (((blue - red) / 255) / difference + 2);
+                else hue = 60 * (((red - green) / 255) / difference + 4);
+            }
+
+            const saturation = difference === 0
+                ? 0
+                : difference / (1 - Math.abs(2 * lightness - 1)) * 100;
+
+            resolve({ hue, saturation, lightness: lightness * 100 });
+        };
+        image.onerror = () => reject(new Error("无法读取背景图片。"));
+        image.src = dataUrl;
+    });
+}
+
+
+async function applyBackgroundAppearance(image = state.backgroundImage, opacity = state.backgroundOpacity) {
+    const root = document.documentElement;
+    root.style.setProperty("--chat-bg-opacity", String(Math.min(Math.max(opacity, 0), 1)));
+    root.style.setProperty("--chat-bg-image", image ? `url(${JSON.stringify(image)})` : "none");
+
+    const requestId = ++appearanceRequestId;
+    if (!image) {
+        resetAppearance();
+        return;
+    }
+
+    try {
+        const seed = await extractSeedColor(image);
+        if (requestId === appearanceRequestId) {
+            applyDynamicColors(seed);
+        }
+    } catch (error) {
+        console.warn("背景动态取色失败:", error);
     }
 }
 
@@ -1823,6 +2271,15 @@ const settingsModal = document.getElementById("settingsModal");
 const apiKeyInput = document.getElementById("apiKeyInput");
 const apiBaseUrlInput = document.getElementById("apiBaseUrlInput");
 const directApiInput = document.getElementById("directApiInput");
+const deepThinkingInput = document.getElementById("deepThinkingInput");
+const backgroundImageInput = document.getElementById("backgroundImageInput");
+const chooseBackgroundBtn = document.getElementById("chooseBackgroundBtn");
+const removeBackgroundBtn = document.getElementById("removeBackgroundBtn");
+const backgroundPreviewImage = document.getElementById("backgroundPreviewImage");
+const backgroundName = document.getElementById("backgroundName");
+const backgroundHint = document.getElementById("backgroundHint");
+const backgroundOpacityInput = document.getElementById("backgroundOpacityInput");
+const backgroundOpacityValue = document.getElementById("backgroundOpacityValue");
 const systemPromptInput = document.getElementById("systemPromptInput");
 const noticeModal = document.getElementById("noticeModal");
 const noticeMessage = document.getElementById("noticeMessage");
@@ -1834,6 +2291,8 @@ const confirmDelete = document.getElementById("confirmDelete");
 const closeDelete = document.getElementById("closeDelete");
 
 let pendingDeleteId = null;
+let pendingBackground = null;
+let appearanceRequestId = 0;
 
 let abortController = null;
 let generating = false;
@@ -2082,7 +2541,27 @@ marked.setOptions({
 
 
 function renderMarkdown(text) {
-    return marked.parse(text || "");
+    const source = text || "";
+    const thinkingBlocks = [];
+    const withoutThinking = source.replace(
+        /<think\b[^>]*>([\s\S]*?)(<\/think>|$)/gi,
+        (_, content, closingTag) => {
+            thinkingBlocks.push({
+                content,
+                complete: Boolean(closingTag)
+            });
+            return "";
+        }
+    );
+
+    const thinkingHtml = thinkingBlocks.map(({ content, complete }) => `
+        <details class="thinking-block">
+            <summary class="thinking-summary">${complete ? "思考过程" : "思考中..."}</summary>
+            <div class="thinking-body">${marked.parse(content)}</div>
+        </details>
+    `).join("");
+
+    return thinkingHtml + marked.parse(withoutThinking);
 }
 
 
@@ -2534,6 +3013,9 @@ function buildRequestBody() {
         model: state.model || DEFAULT_MODEL,
         max_tokens: DEFAULT_MAX_TOKENS,
         stream: true,
+        ...(state.deepThinking
+            ? { thinking: { type: "enabled", budget_tokens: 2048 } }
+            : {}),
         messages: apiMessages
     };
 }
@@ -2770,6 +3252,23 @@ async function readSSEStream(stream, onText) {
     const decoder = new TextDecoder("utf-8");
 
     let buffer = "";
+    let thinkingOpen = false;
+
+    const emitText = (text, mode = "text") => {
+        if (!text) return;
+
+        const isThinking = mode === "thinking";
+
+        if (isThinking && !thinkingOpen) {
+            onText("<think>");
+            thinkingOpen = true;
+        } else if (!isThinking && thinkingOpen) {
+            onText("</think>");
+            thinkingOpen = false;
+        }
+
+        onText(text);
+    };
 
     while (true) {
         const { value, done } = await reader.read();
@@ -2789,7 +3288,7 @@ async function readSSEStream(stream, onText) {
         buffer = events.pop() || "";
 
         for (const event of events) {
-            parseSSEEvent(event, onText);
+            parseSSEEvent(event, emitText);
         }
     }
 
@@ -2797,7 +3296,11 @@ async function readSSEStream(stream, onText) {
     buffer += decoder.decode();
 
     if (buffer.trim()) {
-        parseSSEEvent(buffer, onText);
+        parseSSEEvent(buffer, emitText);
+    }
+
+    if (thinkingOpen) {
+        onText("</think>");
     }
 }
 
@@ -2838,64 +3341,74 @@ function parseSSEEvent(event, onText) {
         return;
     }
 
-    // ========================================================
-    // OpenAI-compatible streaming
-    // ========================================================
-
-    if (
-        Array.isArray(json.choices) &&
-        json.choices.length > 0
-    ) {
+    // OpenAI-compatible reasoning/content streaming.
+    if (Array.isArray(json.choices) && json.choices.length > 0) {
         const choice = json.choices[0];
+        const delta = choice.delta || choice.message || {};
 
-        if (
-            choice.delta &&
-            typeof choice.delta.content === "string"
-        ) {
-            onText(choice.delta.content);
+        if (typeof delta.reasoning_content === "string") {
+            onText(delta.reasoning_content, "thinking");
             return;
         }
 
-        // 某些兼容 API 可能使用 message.content
-        if (
-            choice.message &&
-            typeof choice.message.content === "string"
-        ) {
-            onText(choice.message.content);
+        if (typeof delta.reasoning === "string") {
+            onText(delta.reasoning, "thinking");
+            return;
+        }
+
+        if (typeof delta.content === "string") {
+            onText(delta.content, "text");
             return;
         }
     }
 
-    // ========================================================
-    // 兼容 Anthropic 格式
-    // ========================================================
+    // Anthropic thinking_delta/text_delta streaming.
+    if (json.type === "content_block_delta" && json.delta) {
+        if (json.delta.type === "thinking_delta") {
+            onText(json.delta.thinking || json.delta.text || "", "thinking");
+            return;
+        }
 
-    if (
-        json.type === "content_block_delta" &&
-        json.delta &&
-        json.delta.type === "text_delta"
-    ) {
-        onText(json.delta.text || "");
+        if (json.delta.type === "text_delta") {
+            onText(json.delta.text || "", "text");
+            return;
+        }
+    }
+
+    // Generic proxy formats.
+    if (json.type === "thinking" || json.type === "reasoning") {
+        const text = json.text || json.content || json.reasoning || "";
+        onText(text, "thinking");
         return;
     }
 
-    // ========================================================
-    // 兼容其他代理格式
-    // ========================================================
-
-    if (
-        json.delta &&
-        typeof json.delta.text === "string"
-    ) {
-        onText(json.delta.text);
+    if (typeof json.thinking === "string") {
+        onText(json.thinking, "thinking");
         return;
     }
 
-    if (
-        json.delta &&
-        typeof json.delta.content === "string"
-    ) {
-        onText(json.delta.content);
+    if (typeof json.reasoning === "string") {
+        onText(json.reasoning, "thinking");
+        return;
+    }
+
+    if (json.delta && typeof json.delta.thinking === "string") {
+        onText(json.delta.thinking, "thinking");
+        return;
+    }
+
+    if (json.delta && typeof json.delta.reasoning === "string") {
+        onText(json.delta.reasoning, "thinking");
+        return;
+    }
+
+    if (json.delta && typeof json.delta.text === "string") {
+        onText(json.delta.text, "text");
+        return;
+    }
+
+    if (json.delta && typeof json.delta.content === "string") {
+        onText(json.delta.content, "text");
         return;
     }
 
@@ -2911,56 +3424,6 @@ function parseSSEEvent(event, onText) {
                   JSON.stringify(json.error);
 
         throw new Error(message);
-    }
-}
-
-
-function parseSSEEvent(event, onText) {
-    const lines = event.split(/\r?\n/);
-
-    for (const line of lines) {
-        if (!line.startsWith("data:")) {
-            continue;
-        }
-
-        const data = line.slice(5).trim();
-
-        if (!data || data === "[DONE]") {
-            continue;
-        }
-
-        let json;
-
-        try {
-            json = JSON.parse(data);
-        } catch (error) {
-            console.warn("SSE JSON 解析失败:", data);
-            continue;
-        }
-
-        // OpenAI-compatible streaming
-        if (Array.isArray(json.choices) && json.choices.length > 0) {
-            const choice = json.choices[0];
-
-            if (
-                choice.delta &&
-                typeof choice.delta.content === "string"
-            ) {
-                onText(choice.delta.content);
-                continue;
-            }
-        }
-
-        // API 错误
-        if (json.error) {
-            const message =
-                typeof json.error === "string"
-                    ? json.error
-                    : json.error.message ||
-                      JSON.stringify(json.error);
-
-            throw new Error(message);
-        }
     }
 }
 
@@ -3211,6 +3674,12 @@ async function refreshModels() {
 
 function openSettings() {
 
+    pendingBackground = {
+        image: state.backgroundImage,
+        name: state.backgroundImageName,
+        opacity: state.backgroundOpacity
+    };
+
     apiKeyInput.value =
         state.apiKey || "";
 
@@ -3218,6 +3687,14 @@ function openSettings() {
         state.apiBaseUrl || DEFAULT_API_BASE_URL;
 
     directApiInput.checked = Boolean(state.directApi);
+
+    deepThinkingInput.checked = Boolean(state.deepThinking);
+
+    backgroundOpacityInput.value = String(Math.round(state.backgroundOpacity * 100));
+    updateBackgroundOpacityLabel();
+    backgroundImageInput.dataset.value = state.backgroundImage || "";
+    backgroundImageInput.dataset.name = state.backgroundImageName || "";
+    updateBackgroundPreview(state.backgroundImage, state.backgroundImageName);
 
     systemPromptInput.value =
         state.systemPrompt || "";
@@ -3227,6 +3704,15 @@ function openSettings() {
 
 
 function closeSettings() {
+
+    if (pendingBackground) {
+        state.backgroundImage = pendingBackground.image;
+        state.backgroundImageName = pendingBackground.name;
+        state.backgroundOpacity = pendingBackground.opacity;
+        applyBackgroundAppearance();
+        pendingBackground = null;
+    }
+
     settingsModal.classList.remove("show");
 }
 
@@ -3250,10 +3736,20 @@ function saveSettings() {
 
     state.directApi = directApiInput.checked;
 
+    state.deepThinking = deepThinkingInput.checked;
+
+    state.backgroundImage = backgroundImageInput.dataset.value || "";
+    state.backgroundImageName = backgroundImageInput.dataset.name || "";
+    state.backgroundOpacity = Number(backgroundOpacityInput.value) / 100;
+
     state.systemPrompt =
         systemPromptInput.value;
 
     saveState();
+
+    applyBackgroundAppearance();
+
+    pendingBackground = null;
 
     closeSettings();
 }
@@ -3332,6 +3828,103 @@ function autoResizeTextarea() {
             messageInput.scrollHeight,
             220
         ) + "px";
+}
+
+
+function updateBackgroundOpacityLabel() {
+    const value = Number(backgroundOpacityInput.value) || 0;
+    backgroundOpacityValue.textContent = `${value}%`;
+    document.documentElement.style.setProperty("--chat-bg-opacity", String(value / 100));
+}
+
+
+function updateBackgroundPreview(image, name) {
+    if (image) {
+        backgroundPreviewImage.src = image;
+        backgroundName.textContent = name || "自定义背景图片";
+        backgroundHint.textContent = "图片会平铺在整个页面，并用于生成 Material You 配色。";
+        removeBackgroundBtn.disabled = false;
+        return;
+    }
+
+    backgroundPreviewImage.removeAttribute("src");
+    backgroundName.textContent = "未设置背景图片";
+    backgroundHint.textContent = "图片会平铺在整个页面，并用于生成 Material You 配色。";
+    removeBackgroundBtn.disabled = true;
+}
+
+
+function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("读取图片失败，请重试。"));
+        reader.readAsDataURL(file);
+    });
+}
+
+
+function compressBackgroundImage(dataUrl) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+            const maxDimension = 1600;
+            const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+            const context = canvas.getContext("2d");
+
+            if (!context) {
+                reject(new Error("当前浏览器不支持图片处理。"));
+                return;
+            }
+
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/webp", .82));
+        };
+        image.onerror = () => reject(new Error("无法读取背景图片。"));
+        image.src = dataUrl;
+    });
+}
+
+
+async function selectBackgroundImage(file) {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        showNotice("请选择图片文件。", "文件格式不支持");
+        return;
+    }
+
+    if (file.size > 12 * 1024 * 1024) {
+        showNotice("背景图片大小不能超过 12MB。", "图片过大");
+        return;
+    }
+
+    chooseBackgroundBtn.disabled = true;
+
+    try {
+        const originalDataUrl = await readFileAsDataUrl(file);
+        const dataUrl = await compressBackgroundImage(originalDataUrl);
+        backgroundImageInput.dataset.value = dataUrl;
+        backgroundImageInput.dataset.name = file.name;
+        updateBackgroundPreview(dataUrl, file.name);
+        await applyBackgroundAppearance(dataUrl, Number(backgroundOpacityInput.value) / 100);
+    } catch (error) {
+        showNotice(error.message || "处理背景图片失败，请重试。", "背景图片失败");
+    } finally {
+        chooseBackgroundBtn.disabled = false;
+        backgroundImageInput.value = "";
+    }
+}
+
+
+function removeBackgroundImage() {
+    backgroundImageInput.dataset.value = "";
+    backgroundImageInput.dataset.name = "";
+    updateBackgroundPreview("", "");
+    applyBackgroundAppearance("", Number(backgroundOpacityInput.value) / 100);
 }
 
 
@@ -3419,6 +4012,26 @@ imageInput.addEventListener("change", event => {
 
 
 removeAttachment.addEventListener("click", clearPendingImage);
+
+
+chooseBackgroundBtn.addEventListener("click", () => backgroundImageInput.click());
+
+
+backgroundImageInput.addEventListener("change", event => {
+    selectBackgroundImage(event.target.files[0]);
+});
+
+
+removeBackgroundBtn.addEventListener("click", removeBackgroundImage);
+
+
+backgroundOpacityInput.addEventListener("input", () => {
+    updateBackgroundOpacityLabel();
+    applyBackgroundAppearance(
+        backgroundImageInput.dataset.value || "",
+        Number(backgroundOpacityInput.value) / 100
+    );
+});
 
 
 messageInput.addEventListener(
@@ -3645,6 +4258,15 @@ document
 ========================================================= */
 
 loadState();
+
+applyBackgroundAppearance();
+
+const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+colorSchemeQuery.addEventListener?.("change", () => {
+    if (state.backgroundImage) {
+        applyBackgroundAppearance();
+    }
+});
 
 renderChatList();
 renderModels();
