@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>所见也不一定是真实的</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  /* 铺满视口的隐写层：文字颜色近乎纯白，肉眼看上去页面是空的 */
+  #bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", "Songti SC", "SimSun", serif;
+    font-size: 12px;
+    line-height: 12px;
+    letter-spacing: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #fefefe;
+    user-select: none;
+    pointer-events: none;
+  }
+  #bg span { white-space: pre-wrap; }
+
+  /* 仅在读取失败时出现的极淡提示，正常使用时完全不可见 */
+  #hint {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    max-width: 380px;
+    font: 12px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: #d8d8d8;
+    display: none;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 10;
+  }
+  #hint:hover { color: #bdbdbd; }
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="hint"></div>
+<input type="file" id="fileInput" accept=".txt,text/plain" hidden />
+
+<script>
+(() => {
+  'use strict';
+
+  const bg        = document.getElementById('bg');
+  const hintEl    = document.getElementById('hint');
+  const fileInput = document.getElementById('fileInput');
+
+  const HEADER_BITS = 32;   // 32 位长度头
+  const BASE        = 254;  // 近白基色，最低位承载数据 → 254 / 255
+  const FONT        = 12;   // 与 CSS 的 font-size / line-height 保持一致
+
+  // 用于铺满视口的伪装文本
+  const PAD =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod ' +
+    'tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, ' +
+    'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo ' +
+    'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ' +
+    'cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat ' +
+    'non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ';
+
+  let currentText = '';
+  let resizeTimer = 0;
+
+  /* ---------- 文本 → 位流（32 位长度头 + 数据位） ---------- */
+
+  function buildBits(text) {
+    const bytes = new TextEncoder().encode(text);
+    const bits = new Array(HEADER_BITS + bytes.length * 8);
+    let k = 0;
+
+    for (let i = 31; i >= 0; i--) bits[k++] = (bytes.length >>> i) & 1;
+
+    for (let i = 0; i < bytes.length; i++) {
+      const b = bytes[i];
+      for (let j = 7; j >= 0; j--) bits[k++] = (b >> j) & 1;
+    }
+    return bits;
+  }
+
+  /* ---------- 渲染：把位流写进字符颜色的最低位 ---------- */
+
+  function render(text) {
+    currentText = text;
+    const bits = buildBits(text);
+
+    // 至少铺满整个视口
+    const cols = Math.ceil((window.innerWidth  || 1024) / FONT) + 2;
+    const rows = Math.ceil((window.innerHeight || 768)  / FONT) + 2;
+    const total = Math.max(Math.ceil(bits.length / 3), cols * rows);
+
+    const frag = document.createDocumentFragment();
+    let bi = 0;
+
+    for (let i = 0; i < total; i++) {
+      const span = document.createElement('span');
+      const ch = PAD[i % PAD.length];
+      span.textContent = ch === ' ' ? '\u00A0' : ch;
+
+      let r = BASE, g = BASE, b = BASE;
+      if (bi < bits.length) r = (r & 0xFE) | bits[bi++];
+      if (bi < bits.length) g = (g & 0xFE) | bits[bi++];
+      if (bi < bits.length) b = (b & 0xFE) | bits[bi++];
+
+      span.style.color = `rgb(${r},${g},${b})`;
+      frag.appendChild(span);
+    }
+
+    bg.textContent = '';
+    bg.appendChild(frag);
+
+    hintEl.style.display = 'none';
+  }
+
+  /* ---------- 读取 text.txt ---------- */
+
+  async function loadFromFetch() {
+    try {
+      const res = await fetch('text.txt', { cache: 'no-store' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      render(await res.text());
+    } catch (err) {
+      // 仅在失败时出现极淡提示，正常使用时页面完全空白
+      hintEl.textContent =
+        '未能自动读取 text.txt（' + err.message + '）。' +
+        '若以 file:// 方式打开，浏览器会拦截本地请求 —— 点此手动选择文件。';
+      hintEl.style.display = 'block';
+    }
+  }
+
+  /* ---------- 事件 ---------- */
+
+  hintEl.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    render(await file.text());
+  });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => render(currentText), 250);
+  });
+
+  loadFromFetch();
+})();
+</script>
+</body>
+</html>
